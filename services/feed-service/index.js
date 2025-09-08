@@ -25,8 +25,7 @@ const logger = winston.createLogger({
 
 // Database connections
 const redisClient = redis.createClient({
-  host: process.env.REDIS_HOST || 'localhost',
-  port: process.env.REDIS_PORT || 6379
+  url: `redis://${process.env.REDIS_HOST || 'localhost'}:${process.env.REDIS_PORT || 6379}`
 });
 
 const pgPool = new Pool({
@@ -37,7 +36,7 @@ const pgPool = new Pool({
   password: process.env.POSTGRES_PASSWORD || 'password'
 });
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/shareuptime', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://mongodb:27017/shareuptime', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -220,6 +219,12 @@ class FeedGenerator {
 // Routes
 app.get('/health', (req, res) => {
   res.json({ status: 'healthy', service: 'feed-service' });
+});
+
+// Metrics endpoint for Prometheus
+app.get('/metrics', (req, res) => {
+  res.set('Content-Type', 'text/plain');
+  res.send('# HELP feed_service_health Feed service health status\n# TYPE feed_service_health gauge\nfeed_service_health 1\n');
 });
 
 // Get user feed

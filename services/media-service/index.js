@@ -183,6 +183,12 @@ app.get('/health', (req, res) => {
   res.json({ status: 'healthy', service: 'media-service' });
 });
 
+// Metrics endpoint for Prometheus
+app.get('/metrics', (req, res) => {
+  res.set('Content-Type', 'text/plain');
+  res.send('# HELP media_service_health Media service health status\n# TYPE media_service_health gauge\nmedia_service_health 1\n');
+});
+
 // Upload media files
 app.post('/upload', upload.array('files', 10), async (req, res) => {
   try {

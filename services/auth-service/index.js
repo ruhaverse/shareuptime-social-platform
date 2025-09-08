@@ -34,8 +34,7 @@ const pgPool = new Pool({
 });
 
 const redisClient = redis.createClient({
-  host: process.env.REDIS_HOST || 'localhost',
-  port: process.env.REDIS_PORT || 6379
+  url: `redis://${process.env.REDIS_HOST || 'localhost'}:${process.env.REDIS_PORT || 6379}`
 });
 
 redisClient.on('error', (err) => logger.error('Redis Client Error', err));
@@ -85,6 +84,12 @@ const generateTokens = (user) => {
 // Routes
 app.get('/health', (req, res) => {
   res.json({ status: 'healthy', service: 'auth-service' });
+});
+
+// Metrics endpoint for Prometheus
+app.get('/metrics', (req, res) => {
+  res.set('Content-Type', 'text/plain');
+  res.send('# HELP auth_service_health Auth service health status\n# TYPE auth_service_health gauge\nauth_service_health 1\n');
 });
 
 // Register
