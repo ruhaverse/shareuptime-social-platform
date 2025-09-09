@@ -1,29 +1,31 @@
-const {Pool} = require('pg');
-const pgPool = new Pool({
-    user:'postgres',
-    host:'localhost',
-    database:'mydb',
-    password:'forget_28',
-    port:5432
-})
+require('dotenv').config();
+const { Pool } = require('pg');
+const mongoose = require('mongoose');
+const admin = require('firebase-admin');
+const path = require('path');
 
-const mongoose = require('mongoose')
-mongoose.connect('mongodb+srv://info:Haa1x4iLOYk17vxc@ruhaversedemo1.myv41fm.mongodb.net/',{
-    useNewUrlParser: true,
-    userUnifiedTopology: true
+// ----- PostgreSQL -----
+const pgPool = new Pool({
+  connectionString: process.env.POSTGRES_URI,
 });
 
-const admin = require('firebase-admin');
-const serviceAccount = require('./ruhaverse-firebase-demo-firebase-adminsdk-fbsvc-d1a33b044b.json')
+// ----- MongoDB Atlas -----
+const mongoUri = process.env.MONGO_URI || 'mongodb+srv://shareuptime:shareuptime@shareuptime.mongodb.net/shareuptime?retryWrites=true&w=majority&appName=shareuptime';
 
-admin.initializeApp({
-    credential:admin.credential.cert(serviceAccount)
-})
+mongoose.connect(mongoUri)
+.then(() => console.log('✅ MongoDB Atlas connected to shareuptime cluster'))
+.catch(err => console.error('❌ MongoDB Atlas connection error:', err));
 
+// ----- Firebase -----
+if (!admin.apps.length) {
+  const serviceAccount = require(path.join(__dirname, 'firebase-service-account.json'));
+
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    projectId: process.env.FIREBASE_PROJECT_ID,
+  });
+}
 const firestore = admin.firestore();
 
-module.exports = {
-    pgPool,
-    mongoose,
-    firestore
-};
+// ----- Export connections -----
+module.exports = { pgPool, mongoose, firestore };

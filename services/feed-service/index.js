@@ -36,10 +36,9 @@ const pgPool = new Pool({
   password: process.env.POSTGRES_PASSWORD || 'password'
 });
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://mongodb:27017/shareuptime', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://shareuptime:shareuptime@shareuptime.mongodb.net/shareuptime?retryWrites=true&w=majority&appName=shareuptime')
+.then(() => console.log('✅ MongoDB Atlas connected to shareuptime cluster'))
+.catch(err => console.error('❌ MongoDB Atlas connection error:', err));
 
 // Kafka setup
 const kafka = new Kafka({
