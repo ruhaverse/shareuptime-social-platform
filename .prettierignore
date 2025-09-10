@@ -1,0 +1,14 @@
+node_modules/
+dist/
+build/
+coverage/
+*.min.js
+logs/
+tmp/
+.env*
+package-lock.json
+yarn.lock
+*.log
+ShareUpTimeMobile/ios/
+ShareUpTimeMobile/android/
+CHANGELOG.md

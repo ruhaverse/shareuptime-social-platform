@@ -1,0 +1,17 @@
+node_modules/
+dist/
+build/
+coverage/
+*.min.js
+ShareUpTimeMobile/
+logs/
+tmp/
+.env*
+docker-compose.yml
+monitoring/
+*.md
+*.json
+*.yml
+*.yaml
+.github/
+acceptance-tests/

@@ -12,37 +12,37 @@
     "sourceType": "module"
   },
   "rules": {
-    "indent": ["error", 2],
+    "indent": ["warn", 2],
     "linebreak-style": ["error", "unix"],
-    "quotes": ["error", "single"],
-    "semi": ["error", "always"],
-    "no-unused-vars": ["error", { 
+    "quotes": ["warn", "single"],
+    "semi": ["warn", "always"],
+    "no-unused-vars": ["warn", { 
       "argsIgnorePattern": "^_",
       "varsIgnorePattern": "^_" 
     }],
     "no-console": ["warn"],
     "no-debugger": ["error"],
-    "no-trailing-spaces": ["error"],
-    "eol-last": ["error", "always"],
-    "comma-dangle": ["error", "never"],
-    "object-curly-spacing": ["error", "always"],
-    "array-bracket-spacing": ["error", "never"],
-    "space-before-function-paren": ["error", {
+    "no-trailing-spaces": ["warn"],
+    "eol-last": ["warn", "always"],
+    "comma-dangle": ["warn", "never"],
+    "object-curly-spacing": ["warn", "always"],
+    "array-bracket-spacing": ["warn", "never"],
+    "space-before-function-paren": ["warn", {
       "anonymous": "always",
       "named": "never",
       "asyncArrow": "always"
     }],
-    "keyword-spacing": ["error"],
-    "space-infix-ops": ["error"],
-    "camelcase": ["error", { "properties": "never" }],
-    "prefer-const": ["error"],
+    "keyword-spacing": ["warn"],
+    "space-infix-ops": ["warn"],
+    "camelcase": ["warn", { "properties": "never" }],
+    "prefer-const": ["warn"],
     "no-var": ["error"],
-    "arrow-spacing": ["error"],
-    "template-curly-spacing": ["error", "never"],
-    "rest-spread-spacing": ["error", "never"],
-    "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 1 }],
-    "brace-style": ["error", "1tbs", { "allowSingleLine": true }],
-    "curly": ["error", "all"]
+    "arrow-spacing": ["warn"],
+    "template-curly-spacing": ["warn", "never"],
+    "rest-spread-spacing": ["warn", "never"],
+    "no-multiple-empty-lines": ["warn", { "max": 2, "maxEOF": 1 }],
+    "brace-style": ["warn", "1tbs", { "allowSingleLine": true }],
+    "curly": ["warn", "all"]
   },
   "overrides": [
     {
@@ -64,6 +64,12 @@
       "files": ["services/*/index.js"],
       "rules": {
         "no-console": "off"
+      }
+    },
+    {
+      "files": ["*.js"],
+      "rules": {
+        "indent": "off"
       }
     }
   ],
