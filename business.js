@@ -1,7 +1,9 @@
+// BusinessLogic.js
+
 const { pgPool, mongoose, firestore } = require('./persistence');
 
 class BusinessLogic {
-    // PostgreSQL operations
+    // ---------- PostgreSQL operations ----------
     static async createUser(userData) {
         const { name, email } = userData;
         const query = 'INSERT INTO users (name, email) VALUES ($1, $2) RETURNING *';
@@ -15,7 +17,7 @@ class BusinessLogic {
         return result.rows;
     }
 
-    // MongoDB operations
+    // ---------- MongoDB operations ----------
     static async createProduct(productData) {
         const Product = mongoose.model('Product', {
             name: String,
@@ -33,7 +35,7 @@ class BusinessLogic {
         return await Product.find({});
     }
 
-    // Firebase operations
+    // ---------- Firebase operations ----------
     static async createOrder(orderData) {
         const orderRef = firestore.collection('orders').doc();
         await orderRef.set({
@@ -49,7 +51,7 @@ class BusinessLogic {
         return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     }
 
-    // Cross-database operations
+    // ---------- Cross-database operation ----------
     static async createCompleteTransaction(userData, productData, orderData) {
         try {
             // Create user in PostgreSQL
