@@ -51,6 +51,11 @@ npm test
 
 ## API Endpoints
 
+### Greeting
+- `GET /merhaba` - Turkish greeting with platform information
+- `GET /hello` - Redirects to /merhaba  
+- `GET /greeting` - Redirects to /merhaba
+
 ### Authentication
 - `POST /auth/login` - User login
 - `POST /auth/register` - User registration

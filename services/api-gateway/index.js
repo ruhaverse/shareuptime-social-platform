@@ -88,6 +88,36 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Greeting endpoint - responds to "merhaba" (hello in Turkish)  
+app.get('/merhaba', (req, res) => {
+  res.json({
+    message: 'Merhaba! ShareUpTime API Gateway\'e hoş geldiniz! 👋',
+    english: 'Hello! Welcome to ShareUpTime API Gateway! 👋',
+    platform: 'ShareUpTime - Next-Generation Social Media Platform',
+    gateway: 'API Gateway v1.0.0',
+    availableServices: Object.keys(services),
+    endpoints: {
+      'Authentication': '/auth/*',
+      'User Management': '/users/*', 
+      'Posts': '/posts/*',
+      'Feed': '/feed/*',
+      'Media': '/media/*',
+      'Notifications': '/notifications/*'
+    },
+    status: 'online',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Alternative greeting endpoints
+app.get('/hello', (req, res) => {
+  res.redirect('/merhaba');
+});
+
+app.get('/greeting', (req, res) => {
+  res.redirect('/merhaba');
+});
+
 // Public routes (no authentication required)
 app.use('/auth', createProxyMiddleware({
   target: services.auth,
