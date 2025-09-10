@@ -1,0 +1,252 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Lint & Code Quality
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Run ESLint
+      run: npx eslint . --ext .js,.jsx,.ts,.tsx --max-warnings 0
+    
+    - name: Check Prettier formatting
+      run: npx prettier --check .
+
+  test-backend:
+    runs-on: ubuntu-latest
+    name: Backend Tests
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: shareuptime_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+      
+      mongodb:
+        image: mongo:7
+        env:
+          MONGO_INITDB_ROOT_USERNAME: admin
+          MONGO_INITDB_ROOT_PASSWORD: password
+        ports:
+          - 27017:27017
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Create test environment file
+      run: |
+        cat > .env.test << EOF
+        NODE_ENV=test
+        POSTGRES_HOST=localhost
+        POSTGRES_PORT=5432
+        POSTGRES_DB=shareuptime_test
+        POSTGRES_USER=postgres
+        POSTGRES_PASSWORD=password
+        REDIS_HOST=localhost
+        REDIS_PORT=6379
+        MONGO_URI=mongodb://admin:password@localhost:27017/shareuptime_test?authSource=admin
+        JWT_SECRET=test-secret-key
+        EOF
+    
+    - name: Wait for services
+      run: |
+        sleep 10
+        npx wait-port 5432
+        npx wait-port 6379
+        npx wait-port 27017
+    
+    - name: Run backend tests
+      run: npm run test:backend
+      env:
+        NODE_ENV: test
+
+  test-mobile:
+    runs-on: ubuntu-latest
+    name: Mobile Tests
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install mobile dependencies
+      run: |
+        cd ShareUpTimeMobile
+        npm install
+    
+    - name: Run mobile tests
+      run: |
+        cd ShareUpTimeMobile
+        npm test -- --watchAll=false
+    
+    - name: Type check (if TypeScript)
+      run: |
+        cd ShareUpTimeMobile
+        if [ -f "tsconfig.json" ]; then
+          npx tsc --noEmit
+        fi
+
+  security:
+    runs-on: ubuntu-latest
+    name: Security Audit
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Run security audit
+      run: npm audit --audit-level=moderate
+    
+    - name: Install mobile dependencies and audit
+      run: |
+        cd ShareUpTimeMobile
+        npm install
+        npm audit --audit-level=moderate
+
+  docker-build:
+    runs-on: ubuntu-latest
+    name: Docker Build Test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    
+    - name: Test build API Gateway
+      uses: docker/build-push-action@v5
+      with:
+        context: ./services/api-gateway
+        push: false
+        tags: shareuptime/api-gateway:test
+    
+    - name: Test build Auth Service
+      uses: docker/build-push-action@v5
+      with:
+        context: ./services/auth-service
+        push: false
+        tags: shareuptime/auth-service:test
+    
+    - name: Test Docker Compose
+      run: |
+        docker-compose config
+        docker-compose build --no-cache
+        docker-compose up -d
+        sleep 30
+        curl -f http://localhost:3000/health || exit 1
+        docker-compose down
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    name: Integration Tests
+    needs: [lint, test-backend]
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: shareuptime
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+      
+      mongodb:
+        image: mongo:7
+        env:
+          MONGO_INITDB_ROOT_USERNAME: admin
+          MONGO_INITDB_ROOT_PASSWORD: password
+        ports:
+          - 27017:27017
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Start all services
+      run: |
+        docker-compose up -d
+        sleep 60
+    
+    - name: Run integration tests
+      run: |
+        chmod +x ./acceptance-tests/smoke-tests.sh
+        bash ./acceptance-tests/smoke-tests.sh
+    
+    - name: Cleanup
+      if: always()
+      run: docker-compose down -v
