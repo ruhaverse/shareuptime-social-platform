@@ -124,3 +124,6 @@ dist/
 # Local development files
 .local/
 *.local
+# Firebase service account
+firebase-service-account.json
+firebase-service-account.json1
