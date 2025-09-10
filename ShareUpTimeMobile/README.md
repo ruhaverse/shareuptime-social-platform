@@ -1,8 +1,35 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 📱 ShareUpTime Mobile App
 
-# Getting Started
+A cross-platform mobile application for the ShareUpTime social media platform, built with React Native CLI and TypeScript.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## 🚀 Features
+
+- **Authentication**: Login, Register, JWT token management
+- **Social Feed**: Timeline, posts, likes, comments
+- **User Profiles**: Profile management, follow/unfollow
+- **Real-time Chat**: Messaging system
+- **Media Upload**: Photo/video sharing
+- **Cross-platform**: Android & iOS support
+
+## 🏗️ Tech Stack
+
+- **Framework**: React Native CLI + TypeScript
+- **Navigation**: React Navigation 6 (Stack + Tab)
+- **State Management**: React Context + AsyncStorage
+- **HTTP Client**: Axios
+- **Icons**: React Native Vector Icons (Material Icons)
+- **Backend API**: http://localhost:3000/api
+
+## 📋 Prerequisites
+
+Make sure you have completed the [React Native Environment Setup](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+
+### Required Tools
+- **Node.js** ≥ 18.0.0
+- **React Native CLI**: `npm install -g @react-native-community/cli`
+- **Android Studio** (for Android development)
+- **Xcode** (for iOS development - macOS only)
+- **Java Development Kit (JDK)** ≥ 11
 
 ## Step 1: Start Metro
 
