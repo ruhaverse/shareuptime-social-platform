@@ -158,3 +158,5 @@ app.listen(PORT, () => {
   logger.info(`API Gateway running on port ${PORT}`);
   logger.info('Available services:', services);
 });
+
+module.exports = app;

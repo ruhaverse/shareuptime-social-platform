@@ -10,6 +10,7 @@
     "logs": "docker-compose logs -f",
     "test": "npm run test:services",
     "test:services": "cd services && npm test",
+    "lint": "eslint .",
     "setup": "cp .env.example .env && npm run init:db",
     "init:db": "node scripts/init-databases.js"
   },
@@ -29,7 +30,13 @@
   "devDependencies": {
     "jest": "^29.7.0",
     "nodemon": "^3.0.1",
-    "supertest": "^6.3.3"
+    "supertest": "^6.3.3",
+    "eslint": "^8.19.0",
+    "prettier": "^2.8.8",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-config-prettier": "^9.0.0"
   },
   "dependencies": {
     "dotenv": "^16.6.1",

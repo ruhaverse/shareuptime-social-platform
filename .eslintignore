@@ -1,0 +1,14 @@
+node_modules
+dist
+build
+.expo
+android
+ios
+coverage
+logs
+*.log
+ShareUpTimeMobile/node_modules
+ShareUpTimeMobile/android
+ShareUpTimeMobile/ios
+ShareUpTimeMobile/.bundle
+services/*/node_modules
