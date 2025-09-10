@@ -17,15 +17,16 @@ services:
     networks:
       - shareuptime-network
 
-  mongodb:
-    image: mongo:7
-    container_name: shareuptime-mongodb
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-    networks:
-      - shareuptime-network
+# MongoDB Atlas is used instead of local MongoDB
+  # mongodb:
+  #   image: mongo:7
+  #   container_name: shareuptime-mongodb
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongodb_data:/data/db
+  #   networks:
+  #     - shareuptime-network
 
   neo4j:
     image: neo4j:5
@@ -164,11 +165,10 @@ services:
       - "3003:3003"
     environment:
       - NODE_ENV=development
-      - MONGODB_URI=mongodb://mongodb:27017/shareuptime
+      - MONGODB_URI=mongodb+srv://shareuptime:shareuptime@shareuptime.mongodb.net/shareuptime?retryWrites=true&w=majority&appName=shareuptime
       - POSTGRES_HOST=postgres
       - KAFKA_BROKERS=kafka:9092
     depends_on:
-      - mongodb
       - postgres
       - kafka
     networks:
@@ -181,6 +181,7 @@ services:
       - "3004:3004"
     environment:
       - NODE_ENV=development
+      - MONGODB_URI=mongodb+srv://shareuptime:shareuptime@shareuptime.mongodb.net/shareuptime?retryWrites=true&w=majority&appName=shareuptime
       - REDIS_HOST=redis
       - KAFKA_BROKERS=kafka:9092
     depends_on:
