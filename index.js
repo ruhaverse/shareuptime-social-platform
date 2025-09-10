@@ -38,6 +38,32 @@ app.get('/', (req, res) => {
     });
 });
 
+// Greeting endpoint - responds to "merhaba" (hello in Turkish)
+app.get('/merhaba', (req, res) => {
+    res.json({
+        message: 'Merhaba! ShareUpTime\'a hoş geldiniz! 👋',
+        english: 'Hello! Welcome to ShareUpTime! 👋',
+        platform: 'ShareUpTime - Next-Generation Social Media Platform',
+        features: [
+            'Mikroservis mimarisi / Microservices architecture',
+            'Gerçek zamanlı bildirimler / Real-time notifications', 
+            'Sosyal medya özellikleri / Social media features',
+            'Çoklu dil desteği / Multi-language support'
+        ],
+        status: 'online',
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Alternative greeting endpoints
+app.get('/hello', (req, res) => {
+    res.redirect('/merhaba');
+});
+
+app.get('/greeting', (req, res) => {
+    res.redirect('/merhaba');
+});
+
 // PostgreSQL test route
 app.get('/postgres/test', async (req, res, next) => {
     try {
@@ -82,3 +108,5 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
+module.exports = app;

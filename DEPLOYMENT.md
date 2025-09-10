@@ -107,6 +107,21 @@ Tüm servisler başladıktan sonra:
 
 ### 6. API Test Örnekleri
 
+#### Platform Karşılama:
+```bash
+# Turkish greeting
+curl http://localhost:3000/merhaba
+
+# Alternative endpoints
+curl http://localhost:3000/hello
+curl http://localhost:3000/greeting
+```
+
+#### Health Check:
+```bash
+curl http://localhost:3000/health
+```
+
 #### Kullanıcı Kaydı:
 ```bash
 curl -X POST http://localhost:3000/auth/register \

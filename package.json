@@ -8,7 +8,7 @@
     "dev": "docker-compose up --build",
     "stop": "docker-compose down",
     "logs": "docker-compose logs -f",
-    "test": "npm run test:services",
+    "test": "jest test/",
     "test:services": "cd services && npm test",
     "setup": "cp .env.example .env && npm run init:db",
     "init:db": "node scripts/init-databases.js"
@@ -32,8 +32,12 @@
     "supertest": "^6.3.3"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
     "firebase-admin": "^13.5.0",
+    "helmet": "^8.1.0",
     "mongodb": "^6.19.0",
     "mongoose": "^8.18.1",
     "pg": "^8.16.3"
