@@ -154,9 +154,12 @@ app.use('*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-app.listen(PORT, () => {
-  logger.info(`API Gateway running on port ${PORT}`);
-  logger.info('Available services:', services);
-});
+// Start server only if not in test environment
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    logger.info(`API Gateway running on port ${PORT}`);
+    logger.info('Available services:', services);
+  });
+}
 
 module.exports = app;

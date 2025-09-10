@@ -7,8 +7,5 @@ ios
 coverage
 logs
 *.log
-ShareUpTimeMobile/node_modules
-ShareUpTimeMobile/android
-ShareUpTimeMobile/ios
-ShareUpTimeMobile/.bundle
+ShareUpTimeMobile
 services/*/node_modules

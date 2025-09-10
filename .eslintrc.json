@@ -15,21 +15,5 @@
     "no-unused-vars": "warn",
     "semi": ["error", "always"],
     "quotes": ["warn", "single"]
-  },
-  "overrides": [
-    {
-      "files": ["**/*.ts", "**/*.tsx"],
-      "extends": [
-        "eslint:recommended",
-        "@typescript-eslint/recommended"
-      ],
-      "parser": "@typescript-eslint/parser",
-      "plugins": [
-        "@typescript-eslint"
-      ],
-      "rules": {
-        "@typescript-eslint/no-unused-vars": "warn"
-      }
-    }
-  ]
+  }
 }

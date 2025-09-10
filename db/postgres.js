@@ -5,6 +5,6 @@ const pgPool = new Pool({
     database:'mydb',
     password:'forget_28',
     port:5432
-})
+});
 
 module.exports = { pgPool };
