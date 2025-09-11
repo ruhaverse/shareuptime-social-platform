@@ -1,84 +1,56 @@
 // test-business.js
-const BusinessLogic = require('./business');
+const BusinessLogic = require("./business");
 
-// Redis (v3.x style)
-const redis = require('redis');
-const { promisify } = require('util');
+(async () => {
+  try {
+    // --- Redis Test ---
+    await BusinessLogic.cacheSet("foo", "bar");
+    const value = await BusinessLogic.cacheGet("foo");
+    console.log("🔑 Redis -> foo:", value);
 
-async function testBusinessLogic() {
-    console.log('🧪 Testing Business Logic...\n');
+    // --- PostgreSQL Test ---
+    const user = await BusinessLogic.createUser({
+      name: "Test User",
+      email: "test@example.com",
+    });
+    console.log("🐘 PostgreSQL -> Created User:", user);
 
-    try {
-        // Generate unique values for each test run
-        const uniqueId = Date.now();
+    const users = await BusinessLogic.getUsers();
+    console.log("🐘 PostgreSQL -> All Users:", users);
 
-        // ---------- PostgreSQL ----------
-        console.log('🐘 Testing PostgreSQL...');
-        const newUser = await BusinessLogic.createUser({
-            name: 'Alice',
-            email: `alice${uniqueId}@example.com`
-        });
-        console.log('✅ User created in PostgreSQL:', newUser);
+    // --- MongoDB + Elasticsearch Test ---
+    const product = await BusinessLogic.createProduct({
+      name: "Laptop",
+      price: 1200,
+      category: "Electronics",
+    });
+    console.log("🍃 MongoDB -> Created Product:", product);
 
-        const users = await BusinessLogic.getUsers();
-        console.log('📋 Users in PostgreSQL:', users);
+    const products = await BusinessLogic.getProducts();
+    console.log("🍃 MongoDB -> All Products:", products);
 
-        // ---------- MongoDB ----------
-        console.log('\n🍃 Testing MongoDB...');
-        const newProduct = await BusinessLogic.createProduct({
-            name: `Test Product ${uniqueId}`,
-            price: 19.99,
-            category: 'Electronics'
-        });
-        console.log('✅ Product created in MongoDB:', newProduct);
+    const search = await BusinessLogic.searchProducts("Laptop");
+    console.log("🔍 Elasticsearch -> Search Result:", search);
 
-        const products = await BusinessLogic.getProducts();
-        console.log('📋 Products in MongoDB:', products);
+    // --- Firebase Mock Test ---
+    const order = await BusinessLogic.createOrder({
+      productId: product._id.toString(),
+      quantity: 2,
+    });
+    console.log("🔥 Firebase Mock -> Created Order:", order);
 
-        // ---------- Redis ----------
-        console.log('\n🟥 Testing Redis...');
-        const redisClient = redis.createClient(6379, 'localhost');
-        const getAsync = promisify(redisClient.get).bind(redisClient);
-        const setAsync = promisify(redisClient.set).bind(redisClient);
+    const orders = await BusinessLogic.getOrders();
+    console.log("🔥 Firebase Mock -> All Orders:", orders);
 
-        redisClient.on('connect', () => {
-            console.log('✅ Connected to Redis');
-        });
+    // --- Neo4j Test ---
+    const friendship = await BusinessLogic.createFriendship("Test User", "System");
+    console.log("🕸️ Neo4j -> Friendship:", friendship);
 
-        redisClient.on('error', (err) => {
-            console.error('❌ Redis Error:', err);
-        });
+    const friends = await BusinessLogic.getFriends("Test User");
+    console.log("🕸️ Neo4j -> Friends of Test User:", friends);
 
-        await setAsync('testKey', `RedisValue-${uniqueId}`);
-        const redisValue = await getAsync('testKey');
-        console.log('📦 Redis SET/GET:', redisValue);
-
-        redisClient.quit();
-
-        // ---------- Firebase ----------
-        console.log('\n🔥 Testing Firebase...');
-        const newOrder = await BusinessLogic.createOrder({
-            productName: `Sample Product ${uniqueId}`,
-            quantity: 2,
-            totalPrice: 29.99
-        });
-        console.log('✅ Order created in Firebase:', newOrder);
-
-        const orders = await BusinessLogic.getOrders();
-        console.log('📋 Orders in Firebase:', orders);
-
-        // ---------- Cross-Database ----------
-        console.log('\n🔄 Testing Complete Transaction...');
-        const transaction = await BusinessLogic.createCompleteTransaction(
-            { name: 'Bob', email: `bob${uniqueId}@example.com` }, 
-            { name: `Laptop ${uniqueId}`, price: 899, category: 'Computers' }, 
-            { quantity: 1, totalPrice: 899 }
-        );
-        console.log('✅ Complete transaction:', transaction);
-
-    } catch (error) {
-        console.error('❌ Test failed:', error.message);
-    }
-}
-
-testBusinessLogic();
+    console.log("✅ All database tests completed successfully!");
+  } catch (err) {
+    console.error("❌ Test failed:", err);
+  }
+})();
