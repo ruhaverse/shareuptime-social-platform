@@ -3,8 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
 [![Docker](https://img.shields.io/badge/docker-%3E%3D20.0.0-blue)](https://www.docker.com/)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/yourusername/shareuptime-social-platform/actions)
-[![Coverage](https://img.shields.io/badge/coverage-85%25-green.svg)](https://codecov.io/gh/yourusername/shareuptime-social-platform)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/ruhaverse/shareuptime-social-platform/actions)
+[![Coverage](https://img.shields.io/badge/coverage-85%25-green.svg)](https://codecov.io/gh/ruhaverse/shareuptime-social-platform)
 [![Security](https://img.shields.io/badge/security-A+-brightgreen.svg)](./SECURITY.md)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 
@@ -52,7 +52,7 @@ shareuptime-social-platform/
 
 ### 1️⃣ Clone & Setup
 ```bash
-git clone https://github.com/yourusername/shareuptime-social-platform.git
+git clone https://github.com/ruhaverse/shareuptime-social-platform.git
 cd shareuptime-social-platform
 cp .env.example .env
 ```
@@ -314,10 +314,10 @@ curl http://localhost:9200                # Elasticsearch
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/shareuptime-social-platform/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/shareuptime-social-platform/discussions)
-- **Documentation**: [Wiki](https://github.com/yourusername/shareuptime-social-platform/wiki)
+- **Issues**: [GitHub Issues](https://github.com/ruhaverse/shareuptime-social-platform/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/ruhaverse/shareuptime-social-platform/discussions)
+- **Documentation**: [Wiki](https://github.com/ruhaverse/shareuptime-social-platform/wiki)
 
 ---
 
-**Made with ❤️ by ShareUpTime Team**
+**Made with ❤️ by Ruhaverse Team**

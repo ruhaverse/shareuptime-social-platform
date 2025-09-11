@@ -17,7 +17,7 @@ Aşağıdaki versiyonlar güvenlik güncellemeleri ile desteklenmektedir:
 ### Acil Güvenlik Sorunları
 Kritik güvenlik açıkları için **public issue AÇMAYIN**. Bunun yerine:
 
-**📧 Email**: security@shareuptime.com  
+**📧 Email**: security@ruhaverse.com  
 **🔐 GPG Key**: [Public Key](./security/pgp-public-key.asc)  
 **⏱️ Yanıt Süresi**: 24 saat içinde  
 
@@ -138,14 +138,14 @@ Güvenlik açığı raporlayan araştırmacıları onurlandırıyoruz:
 ## 📞 İletişim
 
 ### Güvenlik Ekibi
-- **Security Lead**: security-lead@shareuptime.com
-- **DevSecOps**: devsecops@shareuptime.com
+- **Security Lead**: security-lead@ruhaverse.com
+- **DevSecOps**: devsecops@ruhaverse.com
 - **Emergency**: +90-XXX-XXX-XXXX (24/7)
 
 ### Güvenlik Güncellemeleri
 - **Security Advisories**: GitHub Security tab
-- **Newsletter**: security-updates@shareuptime.com
-- **Blog**: https://blog.shareuptime.com/security
+- **Newsletter**: security-updates@ruhaverse.com
+- **Blog**: https://blog.ruhaverse.com/security
 
 ## 📚 Güvenlik Kaynakları
 

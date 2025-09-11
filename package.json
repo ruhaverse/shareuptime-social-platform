@@ -11,7 +11,12 @@
     "test": "npm run test:services",
     "test:services": "cd services && npm test",
     "setup": "cp .env.example .env && npm run init:db",
-    "init:db": "node scripts/init-databases.js"
+    "init:db": "node scripts/init-databases.js",
+    "security:audit": "npm audit --audit-level moderate",
+    "security:fix": "npm audit fix",
+    "security:scan": "npm run security:audit && docker run --rm -v $(pwd):/app clair-scanner",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "prettier --write ."
   },
   "keywords": [
     "social-media",
@@ -21,7 +26,15 @@
     "kafka",
     "redis"
   ],
-  "author": "ShareUpTime Team",
+  "author": "Ruhaverse Team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ruhaverse/shareuptime-social-platform.git"
+  },
+  "homepage": "https://github.com/ruhaverse/shareuptime-social-platform#readme",
+  "bugs": {
+    "url": "https://github.com/ruhaverse/shareuptime-social-platform/issues"
+  },
   "license": "MIT",
   "workspaces": [
     "services/*"
@@ -29,7 +42,11 @@
   "devDependencies": {
     "jest": "^29.7.0",
     "nodemon": "^3.0.1",
-    "supertest": "^6.3.3"
+    "supertest": "^6.3.3",
+    "eslint": "^8.57.0",
+    "prettier": "^3.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0"
   },
   "dependencies": {
     "dotenv": "^16.6.1",

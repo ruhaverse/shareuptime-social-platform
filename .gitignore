@@ -119,11 +119,14 @@ coverage/
 
 # Build artifacts
 build/
-dist/
 
 # Local development files
 .local/
 *.local
-# Firebase service account
-firebase-service-account.json
-firebase-service-account.json1
+# Firebase service account (security sensitive)
+firebase-service-account*.json
+*-firebase-adminsdk-*.json
+
+# Package lock files (should be committed in production)
+package-lock.json
+yarn.lock
