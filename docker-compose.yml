@@ -1,32 +1,19 @@
 version: '3.8'
 
 services:
-  # Databases
+  # ---------------------- Databases ----------------------
   postgres:
     image: postgres:15
-    container_name: shareuptime-postgres
     environment:
       POSTGRES_DB: shareuptime
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: Fy@260177
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init-scripts/postgres:/docker-entrypoint-initdb.d
     networks:
       - shareuptime-network
-
-# MongoDB Atlas is used instead of local MongoDB
-  # mongodb:
-  #   image: mongo:7
-  #   container_name: shareuptime-mongodb
-  #   ports:
-  #     - "27017:27017"
-  #   volumes:
-  #     - mongodb_data:/data/db
-  #   networks:
-  #     - shareuptime-network
 
   neo4j:
     image: neo4j:5
@@ -52,6 +39,7 @@ services:
     networks:
       - shareuptime-network
 
+
   elasticsearch:
     image: elasticsearch:8.11.0
     container_name: shareuptime-elasticsearch
@@ -59,6 +47,11 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     ports:
       - "9200:9200"
     volumes:
@@ -81,7 +74,7 @@ services:
     networks:
       - shareuptime-network
 
-  # Message Broker
+  # ---------------------- Messaging ----------------------
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     container_name: shareuptime-zookeeper
@@ -99,14 +92,15 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     ports:
       - "9092:9092"
     networks:
       - shareuptime-network
 
-  # Microservices
+  # ---------------------- Microservices ----------------------
   api-gateway:
     build: ./services/api-gateway
     container_name: shareuptime-api-gateway
@@ -120,6 +114,7 @@ services:
       - post-service
       - feed-service
       - media-service
+      - notification-service
     networks:
       - shareuptime-network
 
@@ -160,7 +155,7 @@ services:
       - "3003:3003"
     environment:
       - NODE_ENV=development
-      - MONGODB_URI=mongodb+srv://shareuptime:shareuptime@shareuptime.mongodb.net/shareuptime?retryWrites=true&w=majority&appName=shareuptime
+      - MONGODB_URI=mongodb+srv://USERNAME:PASSWORD@cluster.mongodb.net/shareuptime
       - POSTGRES_HOST=postgres
       - KAFKA_BROKERS=kafka:9092
     depends_on:
@@ -176,7 +171,6 @@ services:
       - "3004:3004"
     environment:
       - NODE_ENV=development
-      - MONGODB_URI=mongodb+srv://shareuptime:shareuptime@shareuptime.mongodb.net/shareuptime?retryWrites=true&w=majority&appName=shareuptime
       - REDIS_HOST=redis
       - KAFKA_BROKERS=kafka:9092
     depends_on:
@@ -215,7 +209,7 @@ services:
     networks:
       - shareuptime-network
 
-  # Monitoring
+  # ---------------------- Monitoring ----------------------
   prometheus:
     image: prom/prometheus:latest
     container_name: shareuptime-prometheus
@@ -240,12 +234,12 @@ services:
 
 volumes:
   postgres_data:
-  mongodb_data:
   neo4j_data:
   redis_data:
   elasticsearch_data:
   minio_data:
   grafana_data:
+
 
 networks:
   shareuptime-network:

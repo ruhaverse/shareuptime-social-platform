@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 📱 ShareUpTime Mobile App
 
 A cross-platform mobile application for the ShareUpTime social media platform, built with React Native CLI and TypeScript.
@@ -30,95 +31,82 @@ Make sure you have completed the [React Native Environment Setup](https://reactn
 - **Android Studio** (for Android development)
 - **Xcode** (for iOS development - macOS only)
 - **Java Development Kit (JDK)** ≥ 11
+=======
+# ShareUpTimeMobile – React Native Kurulum ve Kullanım Kılavuzu
 
-## Step 1: Start Metro
+Bu klasör, ShareUpTime sosyal platformunun mobil uygulamasıdır. React Native ile geliştirilmiştir.
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+---
+>>>>>>> 660882dc751d3031f0c2d84aa45e49212b1df933
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## 🚀 Hızlı Başlatma
+
+### 1. Gereksinimler
+
+- Node.js ve npm/yarn kurulu olmalı
+- Android Studio (Android için)
+- Xcode (iOS için, sadece Mac)
+- [React Native ortam kurulumu](https://reactnative.dev/docs/environment-setup) tamamlanmalı
+
+### 2. Bağımlılıkları Yükle
+
+Klasöre gir:
+```sh
+cd ShareUpTimeMobile
+npm install
+# veya
+yarn install
+```
+
+### 3. Metro Sunucusunu Başlat
 
 ```sh
-# Using npm
 npm start
-
-# OR using Yarn
+# veya
 yarn start
 ```
 
-## Step 2: Build and run your app
+### 4. Uygulamayı Çalıştır
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
+#### Android:
 ```sh
-# Using npm
 npm run android
-
-# OR using Yarn
+# veya
 yarn android
 ```
 
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
+#### iOS:
+Önce CocoaPods yükle (sadece ilk kurulumda veya native bağımlılık değişirse):
 ```sh
 bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
 bundle exec pod install
 ```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
+Sonra:
 ```sh
-# Using npm
 npm run ios
-
-# OR using Yarn
+# veya
 yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+### 5. Ortam Değişkenleri (.env)
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+`ShareUpTimeMobile/.env.example` dosyasını `.env` olarak kopyala ve düzenle.
 
-## Step 3: Modify your app
+---
 
-Now that you have successfully run the app, let's make changes!
+## 🛠️ Geliştirme
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+- Ana dosya: `App.tsx`
+- Kodda değişiklik yaptıktan sonra uygulama otomatik güncellenir (Fast Refresh)
+- Sorun yaşarsan [React Native Troubleshooting](https://reactnative.dev/docs/troubleshooting) kısmına bakabilirsin.
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+---
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+## ℹ️ Diğer
 
-## Congratulations! :tada:
+- [React Native Belgeleri](https://reactnative.dev/docs/getting-started)
+- [Mobil API ayarları için backend .env dosyanı da unutma!]
 
-You've successfully run and modified your React Native App. :partying_face:
+---
 
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Hazır! Uygulamanı çalıştırabilir ve geliştirmeye başlayabilirsin.
