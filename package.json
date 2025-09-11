@@ -16,7 +16,17 @@
     "security:fix": "npm audit fix",
     "security:scan": "npm run security:audit && docker run --rm -v $(pwd):/app clair-scanner",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
   },
   "keywords": [
     "social-media",
@@ -46,7 +56,10 @@
     "eslint": "^8.57.0",
     "prettier": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0"
+    "@typescript-eslint/parser": "^6.0.0",
+    "mongodb-memory-server": "^9.1.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0"
   },
   "dependencies": {
     "@elastic/elasticsearch": "^8.19.1",
@@ -57,6 +70,6 @@
     "mongoose": "^8.18.1",
     "neo4j-driver": "^5.28.1",
     "pg": "^8.16.3",
-    "redis": "^3.1.2"
+    "redis": "^4.6.0"
   }
 }
