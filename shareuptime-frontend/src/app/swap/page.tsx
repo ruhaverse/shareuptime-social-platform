@@ -5,6 +5,8 @@ import { ShareupLayout } from '@/components/layout/ShareupLayout';
 import { ShareupButton } from '@/components/ui/ShareupButton';
 import { ShareupCard } from '@/components/ui/ShareupCard';
 import { ShareupCamera } from '@/components/media/ShareupCamera';
+import { AdvancedSwapInterface } from '@/components/ui/AdvancedSwapInterface';
+import { AdvancedPostActions } from '@/components/ui/AdvancedPostActions';
 import { shareupColors } from '@/styles/shareup-colors';
 import { useRouter } from 'next/navigation';
 
@@ -28,6 +30,7 @@ export default function SwapPage() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [showCamera, setShowCamera] = useState(false);
+  const [showAdvancedSwap, setShowAdvancedSwap] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [swapPosts, setSwapPosts] = useState<SwapPost[]>([]);
   const [activeTab, setActiveTab] = useState<'create' | 'feed'>('create');
@@ -107,6 +110,30 @@ export default function SwapPage() {
     setSwapPosts(prev => [newSwapPost, ...prev]);
     setSelectedImage(null);
     setActiveTab('feed');
+  };
+
+  const handleAdvancedSwapCreate = (swapData: any) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const imageUrl = e.target?.result as string;
+      const newSwapPost: SwapPost = {
+        id: Date.now().toString(),
+        user: {
+          id: 'current-user',
+          firstName: 'Your',
+          lastName: 'Name',
+        },
+        originalImage: imageUrl,
+        caption: 'New swap challenge created with advanced interface! 🚀',
+        createdAt: new Date().toISOString(),
+        likesCount: 0,
+        swapsCount: 0,
+      };
+      setSwapPosts(prev => [newSwapPost, ...prev]);
+      setShowAdvancedSwap(false);
+      setActiveTab('feed');
+    };
+    reader.readAsDataURL(swapData.file);
   };
 
   const formatTime = (timestamp: string) => {
@@ -190,23 +217,26 @@ export default function SwapPage() {
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex space-x-2">
-            <ShareupButton
-              title="❤️ Like"
-              onPress={() => console.log('Like swap:', post.id)}
-              variant="secondary"
-              size="small"
-              fullWidth
-            />
-            <ShareupButton
-              title="🔄 Swap"
-              onPress={() => router.push(`/swap/${post.id}`)}
-              variant="primary"
-              size="small"
-              fullWidth
-            />
-          </div>
+          {/* Advanced Post Actions */}
+          <AdvancedPostActions
+            postId={post.id}
+            postData={{
+              user: {
+                profilePicturePath: post.user.profilePicture,
+                firstName: post.user.firstName,
+                lastName: post.user.lastName
+              },
+              published: post.createdAt,
+              content: post.caption
+            }}
+            initialLikes={post.likesCount}
+            initialComments={0}
+            initialShares={post.swapsCount}
+            onLike={() => console.log('Like swap:', post.id)}
+            onComment={() => console.log('Comment on swap:', post.id)}
+            onShare={() => console.log('Share swap:', post.id)}
+            onUserProfile={() => console.log('View profile:', post.user.id)}
+          />
         </div>
       </div>
     </ShareupCard>
@@ -284,6 +314,13 @@ export default function SwapPage() {
                         title="📷 Take Photo"
                         onPress={() => setShowCamera(true)}
                         variant="secondary"
+                        size="medium"
+                        fullWidth
+                      />
+                      <ShareupButton
+                        title="🚀 Advanced Swap Interface"
+                        onPress={() => setShowAdvancedSwap(true)}
+                        variant="primary"
                         size="medium"
                         fullWidth
                       />
@@ -392,6 +429,14 @@ export default function SwapPage() {
               onClose={() => setShowCamera(false)}
               mode="photo"
               title="Take Swap Photo"
+            />
+          )}
+
+          {/* Advanced Swap Interface */}
+          {showAdvancedSwap && (
+            <AdvancedSwapInterface
+              onSwapCreate={handleAdvancedSwapCreate}
+              onClose={() => setShowAdvancedSwap(false)}
             />
           )}
         </div>
