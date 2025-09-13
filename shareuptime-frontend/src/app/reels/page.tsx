@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { ShareupReels } from '@/components/media/ShareupReels';
 import { ShareupLayout } from '@/components/layout/ShareupLayout';
+import { AdvancedCameraControls } from '@/components/ui/AdvancedCameraControls';
+import { Plus } from 'lucide-react';
 
 interface Reel {
   id: string;
@@ -23,6 +25,7 @@ interface Reel {
 export default function ReelsPage() {
   const [reels, setReels] = useState<Reel[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showCamera, setShowCamera] = useState(false);
 
   // Mock reels data
   const mockReels: Reel[] = [
@@ -107,6 +110,30 @@ export default function ReelsPage() {
     // Handle follow functionality
   };
 
+  const handleCreateReel = (file: File) => {
+    // Handle reel creation
+    console.log('Creating reel with file:', file.name);
+    
+    // Create new reel object
+    const newReel: Reel = {
+      id: Date.now().toString(),
+      videoUrl: URL.createObjectURL(file),
+      caption: 'New reel created with advanced camera! 🎬',
+      user: {
+        id: 'current-user',
+        firstName: 'Your',
+        lastName: 'Name',
+      },
+      likes: 0,
+      comments: 0,
+      shares: 0,
+      isLiked: false,
+    };
+    
+    setReels(prev => [newReel, ...prev]);
+    setShowCamera(false);
+  };
+
   if (loading) {
     return (
       <div className="fixed inset-0 bg-black flex items-center justify-center">
@@ -116,14 +143,36 @@ export default function ReelsPage() {
   }
 
   return (
-    <ShareupLayout currentPath="/reels" showMobileNav={false}>
-      <ShareupReels
-        reels={reels}
-        onLike={handleLike}
-        onComment={handleComment}
-        onShare={handleShare}
-        onFollow={handleFollow}
-      />
-    </ShareupLayout>
+    <>
+      <ShareupLayout currentPath="/reels" showMobileNav={false}>
+        <div className="relative">
+          <ShareupReels
+            reels={reels}
+            onLike={handleLike}
+            onComment={handleComment}
+            onShare={handleShare}
+            onFollow={handleFollow}
+          />
+          
+          {/* Create Reel Button */}
+          <button
+            onClick={() => setShowCamera(true)}
+            className="fixed bottom-20 right-6 w-14 h-14 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110 z-40"
+          >
+            <Plus className="w-6 h-6 text-white" />
+          </button>
+        </div>
+      </ShareupLayout>
+      
+      {/* Advanced Camera for Reel Creation */}
+      {showCamera && (
+        <AdvancedCameraControls
+          mode="video"
+          title="Create Reel"
+          onCapture={handleCreateReel}
+          onClose={() => setShowCamera(false)}
+        />
+      )}
+    </>
   );
 }

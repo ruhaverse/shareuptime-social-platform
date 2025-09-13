@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Heart, MessageCircle, Share2, Plus } from 'lucide-react';
 import Button from '@/components/ui/Button';
+import { AdvancedPostActions } from '@/components/ui/AdvancedPostActions';
 import { authService } from '@/lib/auth';
 import apiClient from '@/lib/api';
 import { formatDate } from '@/lib/utils';
@@ -14,10 +15,13 @@ interface Post {
   fullName: string;
   content: string;
   imageUrl?: string;
+  profilePicture?: string;
   likes: number;
   comments: number;
+  shares?: number;
   timestamp: string;
   isLiked: boolean;
+  isSaved?: boolean;
 }
 
 export default function FeedPage() {
@@ -44,20 +48,39 @@ export default function FeedPage() {
           username: 'ahmet_yilmaz',
           fullName: 'Ahmet Yılmaz',
           content: 'Bugün harika bir gün! ShareUpTime platformunu test ediyorum. 🚀',
+          profilePicture: '/api/placeholder/50/50',
           likes: 12,
           comments: 3,
+          shares: 2,
           timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
           isLiked: false,
+          isSaved: false,
         },
         {
           id: '2',
           username: 'ayse_kara',
           fullName: 'Ayşe Kara',
           content: 'Yeni projemde React Native kullanıyorum. Çok keyifli! 📱',
+          imageUrl: '/api/placeholder/400/300',
+          profilePicture: '/api/placeholder/50/50',
           likes: 8,
           comments: 1,
+          shares: 5,
           timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
           isLiked: true,
+          isSaved: true,
+        },
+        {
+          id: '3',
+          username: 'mehmet_demir',
+          fullName: 'Mehmet Demir',
+          content: 'ShareUp mobile app UI/UX entegrasyonu tamamlandı! Artık web platformunda da aynı deneyimi yaşayabilirsiniz. 🎨✨',
+          likes: 25,
+          comments: 7,
+          shares: 12,
+          timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+          isLiked: false,
+          isSaved: false,
         },
       ];
       
@@ -153,30 +176,29 @@ export default function FeedPage() {
                 )}
               </div>
 
-              {/* Post Actions */}
-              <div className="flex items-center justify-between pt-4 border-t">
-                <button
-                  onClick={() => handleLike(post.id)}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md transition-colors ${
-                    post.isLiked
-                      ? 'text-red-600 bg-red-50 hover:bg-red-100'
-                      : 'text-gray-600 hover:bg-gray-100'
-                  }`}
-                >
-                  <Heart className={`h-5 w-5 ${post.isLiked ? 'fill-current' : ''}`} />
-                  <span className="text-sm font-medium">{post.likes}</span>
-                </button>
-
-                <button className="flex items-center space-x-2 px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors">
-                  <MessageCircle className="h-5 w-5" />
-                  <span className="text-sm font-medium">{post.comments}</span>
-                </button>
-
-                <button className="flex items-center space-x-2 px-3 py-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors">
-                  <Share2 className="h-5 w-5" />
-                  <span className="text-sm font-medium">Paylaş</span>
-                </button>
-              </div>
+              {/* Advanced Post Actions */}
+              <AdvancedPostActions
+                postId={post.id}
+                postData={{
+                  user: {
+                    profilePicturePath: post.profilePicture,
+                    firstName: post.fullName.split(' ')[0],
+                    lastName: post.fullName.split(' ')[1] || ''
+                  },
+                  published: post.timestamp,
+                  content: post.content
+                }}
+                initialLikes={post.likes}
+                initialComments={post.comments}
+                initialShares={post.shares || 0}
+                isLiked={post.isLiked}
+                isSaved={post.isSaved}
+                onLike={() => handleLike(post.id)}
+                onComment={() => router.push(`/comments/${post.id}`)}
+                onShare={() => console.log('Share post:', post.id)}
+                onSave={() => console.log('Save post:', post.id)}
+                onUserProfile={() => router.push(`/profile/${post.username}`)}
+              />
             </div>
           ))}
         </div>
