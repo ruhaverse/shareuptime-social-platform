@@ -5,6 +5,7 @@ import { ShareupLayout } from '@/components/layout/ShareupLayout';
 import { ShareupButton } from '@/components/ui/ShareupButton';
 import { ShareupCard } from '@/components/ui/ShareupCard';
 import { shareupColors } from '@/styles/shareup-colors';
+import { NotificationAPI, NotificationItem } from '@/services/api';
 
 interface Notification {
   id: string;
@@ -24,57 +25,38 @@ interface Notification {
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [filter, setFilter] = useState<'all' | 'unread'>('all');
-
-  // Mock notifications data
-  const mockNotifications: Notification[] = [
-    {
-      id: '1',
-      type: 'like',
-      user: { id: '1', firstName: 'Ahmet', lastName: 'Yılmaz' },
-      content: 'liked your post',
-      timestamp: new Date(Date.now() - 300000).toISOString(),
-      isRead: false,
-      postId: 'post1',
-    },
-    {
-      id: '2',
-      type: 'comment',
-      user: { id: '2', firstName: 'Zeynep', lastName: 'Kaya' },
-      content: 'commented on your post: "Harika paylaşım! 👏"',
-      timestamp: new Date(Date.now() - 600000).toISOString(),
-      isRead: false,
-      postId: 'post2',
-    },
-    {
-      id: '3',
-      type: 'follow',
-      user: { id: '3', firstName: 'Mehmet', lastName: 'Demir' },
-      content: 'started following you',
-      timestamp: new Date(Date.now() - 1800000).toISOString(),
-      isRead: true,
-    },
-    {
-      id: '4',
-      type: 'mention',
-      user: { id: '4', firstName: 'Ayşe', lastName: 'Özkan' },
-      content: 'mentioned you in a post',
-      timestamp: new Date(Date.now() - 3600000).toISOString(),
-      isRead: true,
-      postId: 'post3',
-    },
-    {
-      id: '5',
-      type: 'share',
-      user: { id: '5', firstName: 'Can', lastName: 'Yıldız' },
-      content: 'shared your post',
-      timestamp: new Date(Date.now() - 7200000).toISOString(),
-      isRead: false,
-      postId: 'post4',
-    },
-  ];
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setNotifications(mockNotifications);
+    const load = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const list = await NotificationAPI.list();
+        // Map backend shape to local Notification
+        const mapped: Notification[] = (list as NotificationItem[]).map((n) => ({
+          id: String(n.id),
+          type: (n.type as any) ?? 'share',
+          user: {
+            id: 'user',
+            firstName: 'User',
+            lastName: '',
+            profilePicture: undefined,
+          },
+          content: n.text,
+          timestamp: n.createdAt,
+          isRead: Boolean((n as any).read),
+          postId: undefined,
+        }));
+        setNotifications(mapped);
+      } catch (e) {
+        setError('Notifications yüklenemedi. Lütfen tekrar deneyin.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
   }, []);
 
   const getNotificationIcon = (type: string) => {
@@ -111,20 +93,26 @@ export default function NotificationsPage() {
     return date.toLocaleDateString();
   };
 
-  const markAsRead = (notificationId: string) => {
-    setNotifications(prev =>
-      prev.map(notification =>
-        notification.id === notificationId
-          ? { ...notification, isRead: true }
-          : notification
-      )
-    );
+  const markAsRead = async (notificationId: string) => {
+    try {
+      await NotificationAPI.read(notificationId);
+      setNotifications(prev =>
+        prev.map(notification =>
+          notification.id === notificationId
+            ? { ...notification, isRead: true }
+            : notification
+        )
+      );
+    } catch {}
   };
 
-  const markAllAsRead = () => {
-    setNotifications(prev =>
-      prev.map(notification => ({ ...notification, isRead: true }))
-    );
+  const markAllAsRead = async () => {
+    try {
+      await NotificationAPI.readAll();
+      setNotifications(prev =>
+        prev.map(notification => ({ ...notification, isRead: true }))
+      );
+    } catch {}
   };
 
   const filteredNotifications = filter === 'unread' 
@@ -137,6 +125,12 @@ export default function NotificationsPage() {
     <ShareupLayout currentPath="/notifications">
       <div className="min-h-screen bg-gray-50 p-4">
         <div className="max-w-2xl mx-auto">
+          {loading && (
+            <div className="mb-4 p-3 rounded-lg bg-shareup-light text-shareup-dark">Loading...</div>
+          )}
+          {error && (
+            <div className="mb-4 p-3 rounded-lg bg-shareup-red/10 border border-shareup-red/20 text-shareup-red text-sm">{error}</div>
+          )}
           {/* Header */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-4">

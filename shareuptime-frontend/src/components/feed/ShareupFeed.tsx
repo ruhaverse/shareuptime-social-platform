@@ -8,6 +8,7 @@ import { StoryRing } from '@/components/media/ShareupStories';
 import { EnhancedPostActions } from '@/components/posts/EnhancedPostActions';
 import { CreatePostModal } from '@/components/create/CreatePostModal';
 import { shareupColors } from '@/styles/shareup-colors';
+import { FeedAPI, PostAPI, MediaAPI } from '@/services/api';
 
 interface User {
   id: string;
@@ -33,6 +34,7 @@ interface ShareupFeedProps {
 export const ShareupFeed: React.FC<ShareupFeedProps> = ({ className = '' }) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
   const [showCreatePost, setShowCreatePost] = useState(false);
@@ -45,61 +47,34 @@ export const ShareupFeed: React.FC<ShareupFeedProps> = ({ className = '' }) => {
     { id: '4', user: { id: '4', firstName: 'Mehmet', lastName: 'Demir', profilePicture: '' }, hasUnviewedStories: false },
   ];
 
-  // Mock data - replace with actual API calls
-  const mockPosts: Post[] = [
-    {
-      id: '1',
-      content: 'ShareUpTime platformuna hoş geldiniz! 🎉 Sosyal medyanın geleceği burada başlıyor.',
-      createdAt: new Date().toISOString(),
-      images: [],
-      likesCount: 12,
-      commentsCount: 3,
-      user: {
-        id: '1',
-        firstName: 'Ahmet',
-        lastName: 'Yılmaz',
-      }
-    },
-    {
-      id: '2',
-      content: 'Yeni mikroservis mimarimiz ile daha hızlı ve güvenilir bir deneyim sunuyoruz! 🚀 #teknoloji #sosyalmedya',
-      createdAt: new Date(Date.now() - 3600000).toISOString(),
-      images: [],
-      likesCount: 25,
-      commentsCount: 8,
-      user: {
-        id: '2',
-        firstName: 'Zeynep',
-        lastName: 'Kaya',
-      }
-    },
-    {
-      id: '3',
-      content: 'Real-time özelliklerimiz artık aktif! Canlı bildirimler ve mesajlaşma deneyimi için hazır olun. 💬',
-      createdAt: new Date(Date.now() - 7200000).toISOString(),
-      images: [],
-      likesCount: 18,
-      commentsCount: 5,
-      user: {
-        id: '3',
-        firstName: 'Mehmet',
-        lastName: 'Demir',
-      }
-    }
-  ];
-
   useEffect(() => {
     loadFeed();
   }, []);
 
   const loadFeed = async () => {
     setLoading(true);
+    setError(null);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setPosts(mockPosts);
+      const data = await FeedAPI.list();
+      // Map backend response to local Post shape if needed
+      const mapped: Post[] = (data as any[]).map((p: any) => ({
+        id: String(p.id ?? p._id ?? ''),
+        content: String(p.content ?? ''),
+        createdAt: String(p.createdAt ?? new Date().toISOString()),
+        images: p.mediaUrl ? [String(p.mediaUrl)] : [],
+        likesCount: Number(p.likes ?? p.likesCount ?? 0),
+        commentsCount: Number(p.commentsCount ?? 0),
+        user: {
+          id: String(p.user?.id ?? p.userId ?? ''),
+          firstName: String(p.user?.firstName ?? p.user?.name ?? 'User'),
+          lastName: String(p.user?.lastName ?? ''),
+          profilePicture: p.user?.avatarUrl,
+        },
+      }));
+      setPosts(mapped);
     } catch (error) {
       console.error('Feed loading error:', error);
+      setError('Feed yüklenirken bir hata oluştu. Lütfen tekrar deneyin.');
     } finally {
       setLoading(false);
     }
@@ -111,14 +86,19 @@ export const ShareupFeed: React.FC<ShareupFeedProps> = ({ className = '' }) => {
     setRefreshing(false);
   };
 
-  const handleLike = (postId: string) => {
-    setPosts(prevPosts =>
-      prevPosts.map(post =>
-        post.id === postId
-          ? { ...post, likesCount: post.likesCount + 1 }
-          : post
-      )
-    );
+  const handleLike = async (postId: string) => {
+    try {
+      await PostAPI.like(postId);
+      setPosts(prevPosts =>
+        prevPosts.map(post =>
+          post.id === postId
+            ? { ...post, likesCount: post.likesCount + 1 }
+            : post
+        )
+      );
+    } catch (e) {
+      console.error('Like failed', e);
+    }
   };
 
   const handleComment = (postId: string) => {
@@ -137,7 +117,7 @@ export const ShareupFeed: React.FC<ShareupFeedProps> = ({ className = '' }) => {
         <div className="space-y-4">
           {[1, 2, 3].map(i => (
             <div key={i} className="animate-pulse">
-              <div className={`bg-[${shareupColors.lighterGray}] h-48 rounded-lg`}></div>
+              <div className={`bg-shareup-lighter-gray h-48 rounded-lg`}></div>
             </div>
           ))}
         </div>
@@ -147,6 +127,11 @@ export const ShareupFeed: React.FC<ShareupFeedProps> = ({ className = '' }) => {
 
   return (
     <div className={`${className}`}>
+      {error && (
+        <div className="mb-4 p-3 rounded-lg bg-shareup-red/10 border border-shareup-red/20 text-shareup-red text-sm">
+          {error}
+        </div>
+      )}
       {/* Stories Section */}
       <div className="bg-white rounded-lg shadow-md p-4 mb-6 border border-shareup-lighter-gray">
         <div className="flex space-x-4 overflow-x-auto pb-2">
@@ -175,7 +160,7 @@ export const ShareupFeed: React.FC<ShareupFeedProps> = ({ className = '' }) => {
 
       {/* Feed Header */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className={`text-2xl font-bold text-[${shareupColors.dark}]`}>
+        <h2 className={`text-2xl font-bold text-shareup-dark`}>
           News Feed
         </h2>
         <ShareupButton
@@ -190,15 +175,15 @@ export const ShareupFeed: React.FC<ShareupFeedProps> = ({ className = '' }) => {
       {/* Create Post Section */}
       <div className={`
         bg-white rounded-lg shadow-md p-4 mb-6
-        border border-[${shareupColors.lighterGray}]
+        border border-shareup-lighter-gray
       `}>
         <div className="flex items-center space-x-3">
           <div className={`
             w-10 h-10 rounded-full 
-            bg-[${shareupColors.profilePicture}] 
+            bg-shareup-profile 
             flex items-center justify-center
           `}>
-            <span className={`text-[${shareupColors.white}] font-semibold`}>
+            <span className={`text-white font-semibold`}>
               U
             </span>
           </div>
@@ -206,22 +191,22 @@ export const ShareupFeed: React.FC<ShareupFeedProps> = ({ className = '' }) => {
             onClick={() => setShowCreatePost(true)}
             className={`
               flex-1 text-left px-4 py-3 
-              bg-[${shareupColors.aliceBlue}] 
+              bg-shareup-light 
               rounded-full
-              text-[${shareupColors.dimGray}]
+              text-shareup-dim-gray
               hover:bg-opacity-80 transition-colors duration-200
             `}
           >
             What's on your mind?
           </button>
         </div>
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-[${shareupColors.lighterGray}]">
+        <div className="flex items-center justify-between mt-3 pt-3 border-t border-shareup-lighter-gray">
           <button 
             onClick={() => setShowCamera(true)}
             className={`
               flex items-center space-x-2 px-4 py-2 rounded-lg
-              text-[${shareupColors.dimGray}] 
-              hover:bg-[${shareupColors.aliceBlue}]
+              text-shareup-dim-gray 
+              hover:bg-shareup-light
               transition-colors duration-200
             `}
           >
@@ -232,8 +217,8 @@ export const ShareupFeed: React.FC<ShareupFeedProps> = ({ className = '' }) => {
             onClick={() => setShowCamera(true)}
             className={`
               flex items-center space-x-2 px-4 py-2 rounded-lg
-              text-[${shareupColors.dimGray}] 
-              hover:bg-[${shareupColors.aliceBlue}]
+              text-shareup-dim-gray 
+              hover:bg-shareup-light
               transition-colors duration-200
             `}
           >
@@ -242,8 +227,8 @@ export const ShareupFeed: React.FC<ShareupFeedProps> = ({ className = '' }) => {
           </button>
           <button className={`
             flex items-center space-x-2 px-4 py-2 rounded-lg
-            text-[${shareupColors.dimGray}] 
-            hover:bg-[${shareupColors.aliceBlue}]
+            text-shareup-dim-gray 
+            hover:bg-shareup-light
             transition-colors duration-200
           `}>
             <span>😊</span>
@@ -294,22 +279,31 @@ export const ShareupFeed: React.FC<ShareupFeedProps> = ({ className = '' }) => {
           isOpen={showCreatePost}
           onClose={() => setShowCreatePost(false)}
           onPost={async (content, media) => {
-            console.log('Creating post:', { content, media });
-            // Add new post to the beginning of the list
-            const newPost: Post = {
-              id: Date.now().toString(),
-              content,
-              createdAt: new Date().toISOString(),
-              images: media?.map(file => URL.createObjectURL(file)) || [],
-              likesCount: 0,
-              commentsCount: 0,
-              user: {
-                id: 'current-user',
-                firstName: 'Your',
-                lastName: 'Name',
+            try {
+              let mediaUrl: string | undefined;
+              if (media && media.length > 0) {
+                // upload first file for now
+                const up = await MediaAPI.upload(media[0]);
+                mediaUrl = up.fileUrl;
               }
-            };
-            setPosts(prev => [newPost, ...prev]);
+              const created = await PostAPI.create({ content, mediaUrl });
+              const newPost: Post = {
+                id: String((created as any).id ?? (created as any)._id ?? Date.now()),
+                content: created.content,
+                createdAt: new Date().toISOString(),
+                images: created.mediaUrl ? [created.mediaUrl] : [],
+                likesCount: 0,
+                commentsCount: 0,
+                user: {
+                  id: 'current-user',
+                  firstName: 'You',
+                  lastName: '',
+                }
+              };
+              setPosts(prev => [newPost, ...prev]);
+            } catch (e) {
+              console.error('Post create failed', e);
+            }
           }}
         />
       )}
