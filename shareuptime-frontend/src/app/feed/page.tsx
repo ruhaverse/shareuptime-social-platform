@@ -1,12 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Heart, MessageCircle, Share2, Plus } from 'lucide-react';
-import Button from '@/components/ui/Button';
 import { AdvancedPostActions } from '@/components/ui/AdvancedPostActions';
+import { AdvancedStoriesComponent } from '@/components/ui/AdvancedStoriesComponent';
+import { AdvancedSidebarLayout } from '@/components/ui/AdvancedSidebarLayout';
 import { authService } from '@/lib/auth';
-import apiClient from '@/lib/api';
 import { formatDate } from '@/lib/utils';
 
 interface Post {
@@ -22,11 +21,20 @@ interface Post {
   timestamp: string;
   isLiked: boolean;
   isSaved?: boolean;
-}
+};
 
 export default function FeedPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [stories, setStories] = useState<any[]>([]);
+  
+  // Mock current user
+  const currentUser = {
+    id: 'current-user',
+    firstName: 'Your',
+    lastName: 'Name',
+    profilePicture: '/api/placeholder/64/64'
+  };
   const [user, setUser] = useState<any>(null);
   const router = useRouter();
 
@@ -36,12 +44,8 @@ export default function FeedPage() {
       return;
     }
     
-    loadFeed();
-  }, [router]);
-
-  const loadFeed = async () => {
-    try {
-      // Mock data - gerçek API'den gelecek
+    // Simulate API call
+    setTimeout(() => {
       const mockPosts: Post[] = [
         {
           id: '1',
@@ -83,14 +87,51 @@ export default function FeedPage() {
           isSaved: false,
         },
       ];
-      
+
+      const mockStories = [
+        {
+          id: '1',
+          user: {
+            id: '1',
+            firstName: 'Ahmet',
+            lastName: 'Yılmaz',
+            profilePicture: '/api/placeholder/64/64'
+          },
+          imageUrl: '/api/placeholder/400/600',
+          timestamp: new Date().toISOString(),
+          viewed: false
+        },
+        {
+          id: '2',
+          user: {
+            id: '2',
+            firstName: 'Zeynep',
+            lastName: 'Kaya',
+            profilePicture: '/api/placeholder/64/64'
+          },
+          imageUrl: '/api/placeholder/400/600',
+          timestamp: new Date().toISOString(),
+          viewed: true
+        },
+        {
+          id: '3',
+          user: {
+            id: '3',
+            firstName: 'Mehmet',
+            lastName: 'Demir',
+            profilePicture: '/api/placeholder/64/64'
+          },
+          imageUrl: '/api/placeholder/400/600',
+          timestamp: new Date().toISOString(),
+          viewed: false
+        }
+      ];
+
       setPosts(mockPosts);
-    } catch (error) {
-      console.error('Feed yüklenirken hata:', error);
-    } finally {
+      setStories(mockStories);
       setLoading(false);
-    }
-  };
+    }, 1000);
+  }, [router]);
 
   const handleLike = async (postId: string) => {
     setPosts(prevPosts =>
@@ -111,6 +152,21 @@ export default function FeedPage() {
     router.push('/login');
   };
 
+  const handleShare = (postId: string) => {
+    console.log('Share post:', postId);
+    // Handle share functionality
+  };
+
+  const handleStoryClick = (story: any) => {
+    console.log('View story:', story);
+    // Handle story view
+  };
+
+  const handleCreateStory = () => {
+    console.log('Create new story');
+    // Handle story creation
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -123,33 +179,15 @@ export default function FeedPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-2xl mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-blue-600">ShareUpTime</h1>
-          <div className="flex items-center space-x-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => router.push('/create-post')}
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Paylaş
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleLogout}
-            >
-              Çıkış
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      {/* Feed */}
-      <main className="max-w-2xl mx-auto px-4 py-6">
+    <AdvancedSidebarLayout user={currentUser} currentPath="/feed">
+      <div className="max-w-2xl mx-auto space-y-6">
+        {/* Stories Section */}
+        <AdvancedStoriesComponent
+          stories={stories}
+          currentUserId={currentUser.id}
+          onStoryClick={handleStoryClick}
+          onCreateStory={handleCreateStory}
+        />
         <div className="space-y-6">
           {posts.map((post) => (
             <div key={post.id} className="bg-white rounded-lg shadow-sm border p-6">
@@ -206,15 +244,15 @@ export default function FeedPage() {
         {posts.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">Henüz gönderi yok.</p>
-            <Button
-              className="mt-4"
+            <button
+              className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
               onClick={() => router.push('/create-post')}
             >
               İlk gönderini paylaş
-            </Button>
+            </button>
           </div>
         )}
-      </main>
-    </div>
+      </div>
+    </AdvancedSidebarLayout>
   );
 }

@@ -191,7 +191,7 @@ export const AdvancedSwapInterface: React.FC<AdvancedSwapInterfaceProps> = ({
 
           {/* Gallery Button */}
           <div className="text-center space-y-3">
-            <p className="text-white/60 text-sm">Already have an image?</p>
+            <p className="text-gray-600">Can&apos;t recreate this? Try a different angle!</p>
             <button
               onClick={handleGallerySelect}
               className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-2xl font-bold text-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-200 flex items-center justify-center space-x-3"
