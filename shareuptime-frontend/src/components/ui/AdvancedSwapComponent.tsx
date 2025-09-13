@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import { Camera, Upload, X, MapPin, Clock, Users, Share2, Heart, MessageCircle } from 'lucide-react';
 import { shareupColors } from '@/styles/shareup-colors';
 import { AdvancedCameraControls } from './AdvancedCameraControls';
+import { swapService, SwapCreateData } from '@/services/swapService';
 
 interface User {
   id: string;
@@ -70,11 +71,21 @@ export const AdvancedSwapComponent: React.FC<AdvancedSwapComponentProps> = ({
     }
   };
 
-  const handleCameraCapture = (file: File) => {
+  const handleCameraCapture = async (file: File) => {
     if (showSwapCamera) {
-      // Handle swap response
-      onSwapResponse(showSwapCamera, file);
-      setShowSwapCamera(null);
+      // Handle swap response with backend integration
+      try {
+        const result = await swapService.submitSwapResponse(showSwapCamera, file);
+        if (result.success) {
+          // Call the original handler for UI updates
+          onSwapResponse(showSwapCamera, file);
+          setShowSwapCamera(null);
+        } else {
+          console.error('Failed to submit swap response:', result.message);
+        }
+      } catch (error) {
+        console.error('Error submitting swap response:', error);
+      }
     } else {
       // Handle original image for new swap
       setSelectedImage(file);
@@ -82,23 +93,38 @@ export const AdvancedSwapComponent: React.FC<AdvancedSwapComponentProps> = ({
     }
   };
 
-  const handleCreateSwap = () => {
+  const handleCreateSwap = async () => {
     if (!selectedImage || !caption.trim()) return;
 
-    const swapData: SwapData = {
+    const swapData: SwapCreateData = {
       originalImage: selectedImage,
       caption: caption.trim(),
       location: location.trim() || undefined,
       timeLimit
     };
 
-    onCreateSwap(swapData);
-    
-    // Reset form
-    setSelectedImage(null);
-    setCaption('');
-    setLocation('');
-    setTimeLimit(24);
+    try {
+      const result = await swapService.createSwapChallenge(swapData);
+      
+      if (result.success) {
+        // Reset form
+        setSelectedImage(null);
+        setCaption('');
+        setLocation('');
+        setTimeLimit(24);
+        
+        // Switch to feed tab to show the created challenge
+        setActiveTab('feed');
+        
+        // Call the original handler for any additional UI updates
+        onCreateSwap(swapData);
+      } else {
+        console.error('Failed to create swap:', result.message);
+        // You can implement toast notification here
+      }
+    } catch (error) {
+      console.error('Error creating swap:', error);
+    }
   };
 
   const formatTimeRemaining = (timestamp: string, timeLimit: number) => {
