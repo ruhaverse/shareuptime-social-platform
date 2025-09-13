@@ -34,7 +34,7 @@ class ShareService {
    */
   async sharePost(shareData: ShareData): Promise<ShareResponse> {
     try {
-      const response = await apiClient.post('/api/shares', {
+      const response = await apiClient.post<{ shareId: string; shareUrl: string }>('/api/shares', {
         postId: shareData.postId,
         shareType: shareData.shareType,
         message: shareData.message,
@@ -44,9 +44,9 @@ class ShareService {
 
       return {
         success: true,
-        shareId: response.data.shareId,
+        shareId: response.shareId,
         message: 'Post shared successfully',
-        shareUrl: response.data.shareUrl
+        shareUrl: response.shareUrl
       };
     } catch (error: any) {
       console.error('Share post error:', error);
@@ -62,7 +62,7 @@ class ShareService {
    */
   async shareToExternalPlatform(shareData: ShareData): Promise<ShareResponse> {
     try {
-      const response = await apiClient.post('/api/shares/external', {
+      const response = await apiClient.post<{ shareId: string; shareUrl: string }>('/api/shares/external', {
         postId: shareData.postId,
         platform: shareData.platform,
         message: shareData.message,
@@ -71,9 +71,9 @@ class ShareService {
 
       return {
         success: true,
-        shareId: response.data.shareId,
+        shareId: response.shareId,
         message: `Shared to ${shareData.platform} successfully`,
-        shareUrl: response.data.shareUrl
+        shareUrl: response.shareUrl
       };
     } catch (error: any) {
       console.error('External share error:', error);
@@ -89,8 +89,8 @@ class ShareService {
    */
   async getShareStats(postId: string): Promise<ShareStats | null> {
     try {
-      const response = await apiClient.get(`/api/shares/stats/${postId}`);
-      return response.data;
+      const response = await apiClient.get<ShareStats>(`/api/shares/stats/${postId}`);
+      return response;
     } catch (error: any) {
       console.error('Get share stats error:', error);
       return null;
@@ -102,8 +102,8 @@ class ShareService {
    */
   async getUserShares(userId: string, limit = 20): Promise<any[]> {
     try {
-      const response = await apiClient.get(`/api/users/${userId}/shares?limit=${limit}`);
-      return response.data.shares || [];
+      const response = await apiClient.get<{ shares: any[] }>(`/api/users/${userId}/shares?limit=${limit}`);
+      return response.shares || [];
     } catch (error: any) {
       console.error('Get user shares error:', error);
       return [];
@@ -132,13 +132,13 @@ class ShareService {
     allowDownload?: boolean;
   }): Promise<string | null> {
     try {
-      const response = await apiClient.post(`/api/shares/generate-link`, {
+      const response = await apiClient.post<{ shareUrl: string }>(`/api/shares/generate-link`, {
         postId,
         ...options,
         timestamp: new Date().toISOString()
       });
       
-      return response.data.shareUrl;
+      return response.shareUrl;
     } catch (error: any) {
       console.error('Generate share link error:', error);
       return null;
