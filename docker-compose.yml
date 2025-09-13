@@ -39,6 +39,16 @@ services:
     networks:
       - shareuptime-network
 
+  mongodb:
+    image: mongo:7
+    container_name: shareuptime-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - shareuptime-network
+
 
   elasticsearch:
     image: elasticsearch:8.11.0
@@ -93,8 +103,9 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
     ports:
       - "9092:9092"
     networks:
@@ -155,11 +166,12 @@ services:
       - "3003:3003"
     environment:
       - NODE_ENV=development
-      - MONGODB_URI=mongodb+srv://USERNAME:PASSWORD@cluster.mongodb.net/shareuptime
+      - MONGODB_URI=mongodb://mongodb:27017/shareuptime
       - POSTGRES_HOST=postgres
       - KAFKA_BROKERS=kafka:9092
     depends_on:
       - postgres
+      - mongodb
       - kafka
     networks:
       - shareuptime-network
@@ -209,6 +221,50 @@ services:
     networks:
       - shareuptime-network
 
+  social-service:
+    build: ./services/social-service
+    container_name: shareuptime-social-service
+    ports:
+      - "3007:3007"
+    environment:
+      - NODE_ENV=development
+      - POSTGRES_HOST=postgres
+      - REDIS_HOST=redis
+      - KAFKA_BROKERS=kafka:9092
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+    networks:
+      - shareuptime-network
+
+  realtime-service:
+    build: ./services/realtime-service
+    container_name: shareuptime-realtime-service
+    ports:
+      - "3008:3008"
+    environment:
+      - NODE_ENV=development
+      - POSTGRES_HOST=postgres
+      - REDIS_HOST=redis
+      - KAFKA_BROKERS=kafka:9092
+    depends_on:
+      - postgres
+      - redis
+      - kafka
+    networks:
+      - shareuptime-network
+
+  swagger-docs:
+    build: ./services/swagger-docs
+    container_name: shareuptime-swagger-docs
+    ports:
+      - "3009:3009"
+    environment:
+      - NODE_ENV=development
+    networks:
+      - shareuptime-network
+
   # ---------------------- Monitoring ----------------------
   prometheus:
     image: prom/prometheus:latest
@@ -236,6 +292,7 @@ volumes:
   postgres_data:
   neo4j_data:
   redis_data:
+  mongodb_data:
   elasticsearch_data:
   minio_data:
   grafana_data:

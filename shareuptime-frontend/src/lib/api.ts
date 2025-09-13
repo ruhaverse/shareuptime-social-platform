@@ -7,7 +7,7 @@ class ApiClient {
 
   constructor() {
     // Backend API Gateway URL
-    this.baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+    this.baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
     
     this.client = axios.create({
       baseURL: this.baseURL,

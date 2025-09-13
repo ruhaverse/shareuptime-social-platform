@@ -32,7 +32,7 @@ const pgPool = new Pool({
   password: process.env.POSTGRES_PASSWORD || 'password'
 });
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://shareuptime:shareuptime@shareuptime.mongodb.net/shareuptime?retryWrites=true&w=majority&appName=shareuptime')
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/shareuptime')
 .then(() => console.log('✅ MongoDB Atlas connected to shareuptime cluster'))
 .catch(err => console.error('❌ MongoDB Atlas connection error:', err));
 

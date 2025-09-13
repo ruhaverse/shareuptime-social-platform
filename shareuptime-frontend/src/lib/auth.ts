@@ -10,7 +10,8 @@ interface RegisterRequest {
   username: string;
   email: string;
   password: string;
-  fullName: string;
+  firstName: string;
+  lastName: string;
 }
 
 interface AuthResponse {
@@ -28,35 +29,53 @@ interface AuthResponse {
 export class AuthService {
   async login(email: string, password: string): Promise<AuthResponse> {
     try {
-      const response = await apiClient.post<AuthResponse>('/auth/login', {
+      const response: any = await apiClient.post('/auth/login', {
         email,
         password,
       });
       
-      if (response.success && response.token) {
-        Cookies.set('token', response.token, { expires: 7 });
+      if (response.accessToken) {
+        Cookies.set('token', response.accessToken, { expires: 7 });
         if (response.user) {
           Cookies.set('userId', response.user.id, { expires: 7 });
         }
+        return {
+          success: true,
+          token: response.accessToken,
+          user: response.user
+        };
       }
       
-      return response;
+      return { success: false, message: 'Login failed' };
     } catch (error: any) {
       return {
         success: false,
-        message: error.response?.data?.message || 'Giriş başarısız',
+        message: error.response?.data?.error || 'Giriş başarısız',
       };
     }
   }
 
   async register(userData: RegisterRequest): Promise<AuthResponse> {
     try {
-      const response = await apiClient.post<AuthResponse>('/auth/register', userData);
-      return response;
+      const response: any = await apiClient.post('/auth/register', userData);
+      
+      if (response.accessToken) {
+        Cookies.set('token', response.accessToken, { expires: 7 });
+        if (response.user) {
+          Cookies.set('userId', response.user.id, { expires: 7 });
+        }
+        return {
+          success: true,
+          token: response.accessToken,
+          user: response.user
+        };
+      }
+      
+      return { success: false, message: 'Registration failed' };
     } catch (error: any) {
       return {
         success: false,
-        message: error.response?.data?.message || 'Kayıt başarısız',
+        message: error.response?.data?.error || 'Kayıt başarısız',
       };
     }
   }
