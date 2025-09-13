@@ -48,12 +48,8 @@ class ShareService {
         message: 'Post shared successfully',
         shareUrl: response.shareUrl
       };
-    } catch (error: any) {
-      console.error('Share post error:', error);
-      return {
-        success: false,
-        message: error.response?.data?.message || 'Failed to share post'
-      };
+    } catch (error) {
+      throw error;
     }
   }
 
@@ -76,7 +72,6 @@ class ShareService {
         shareUrl: response.shareUrl
       };
     } catch (error: any) {
-      console.error('External share error:', error);
       return {
         success: false,
         message: error.response?.data?.message || `Failed to share to ${shareData.platform}`
@@ -92,7 +87,6 @@ class ShareService {
       const response = await apiClient.get<ShareStats>(`/api/shares/stats/${postId}`);
       return response;
     } catch (error: any) {
-      console.error('Get share stats error:', error);
       return null;
     }
   }
@@ -105,7 +99,6 @@ class ShareService {
       const response = await apiClient.get<{ shares: any[] }>(`/api/users/${userId}/shares?limit=${limit}`);
       return response.shares || [];
     } catch (error: any) {
-      console.error('Get user shares error:', error);
       return [];
     }
   }
@@ -118,7 +111,6 @@ class ShareService {
       await apiClient.delete(`/api/shares/${shareId}`);
       return true;
     } catch (error: any) {
-      console.error('Delete share error:', error);
       return false;
     }
   }
@@ -140,7 +132,6 @@ class ShareService {
       
       return response.shareUrl;
     } catch (error: any) {
-      console.error('Generate share link error:', error);
       return null;
     }
   }
@@ -157,7 +148,7 @@ class ShareService {
         referrer: document.referrer
       });
     } catch (error: any) {
-      console.error('Track share event error:', error);
+      // Silent fail for analytics
     }
   }
 }

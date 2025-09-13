@@ -77,12 +77,8 @@ class SwapService {
         challengeId: response.data.challengeId,
         message: 'Swap challenge created successfully'
       };
-    } catch (error: any) {
-      console.error('Create swap challenge error:', error);
-      return {
-        success: false,
-        message: error.response?.data?.message || 'Failed to create swap challenge'
-      };
+    } catch (error) {
+      throw error;
     }
   }
 
@@ -109,12 +105,8 @@ class SwapService {
         responseId: response.data.responseId,
         message: 'Swap response submitted successfully'
       };
-    } catch (error: any) {
-      console.error('Submit swap response error:', error);
-      return {
-        success: false,
-        message: error.response?.data?.message || 'Failed to submit swap response'
-      };
+    } catch (error) {
+      throw error;
     }
   }
 
@@ -141,8 +133,7 @@ class SwapService {
 
       const response = await apiClient.get(`/api/swaps/challenges?${params}`) as { data: { challenges: SwapChallenge[] } };
       return response.data.challenges || [];
-    } catch (error: any) {
-      console.error('Get active challenges error:', error);
+    } catch (error) {
       return [];
     }
   }
@@ -162,8 +153,7 @@ class SwapService {
         responses: response.data.responses || [],
         userResponse: response.data.userResponse
       };
-    } catch (error: any) {
-      console.error('Get challenge details error:', error);
+    } catch (error) {
       return {
         challenge: null,
         responses: [],
@@ -182,9 +172,8 @@ class SwapService {
         timestamp: new Date().toISOString()
       });
       return true;
-    } catch (error: any) {
-      console.error('Vote for response error:', error);
-      return false;
+    } catch (error) {
+      throw error;
     }
   }
 
@@ -195,8 +184,7 @@ class SwapService {
     try {
       const response = await apiClient.get(`/api/swaps/users/${userId}/stats`) as { data: SwapStats };
       return response.data;
-    } catch (error: any) {
-      console.error('Get user swap stats error:', error);
+    } catch (error) {
       return null;
     }
   }
@@ -209,8 +197,7 @@ class SwapService {
       const params = status ? `?status=${status}` : '';
       const response = await apiClient.get(`/api/swaps/users/${userId}/challenges${params}`) as { data: { challenges: SwapChallenge[] } };
       return response.data.challenges || [];
-    } catch (error: any) {
-      console.error('Get user challenges error:', error);
+    } catch (error) {
       return [];
     }
   }
@@ -222,8 +209,7 @@ class SwapService {
     try {
       const response = await apiClient.get(`/api/swaps/users/${userId}/responses?limit=${limit}`) as { data: { responses: SwapResponse[] } };
       return response.data.responses || [];
-    } catch (error: any) {
-      console.error('Get user responses error:', error);
+    } catch (error) {
       return [];
     }
   }
@@ -235,8 +221,7 @@ class SwapService {
     try {
       await apiClient.delete(`/api/swaps/challenges/${challengeId}`);
       return true;
-    } catch (error: any) {
-      console.error('Delete challenge error:', error);
+    } catch (error) {
       return false;
     }
   }
@@ -253,8 +238,7 @@ class SwapService {
         timestamp: new Date().toISOString()
       });
       return true;
-    } catch (error: any) {
-      console.error('Report swap content error:', error);
+    } catch (error) {
       return false;
     }
   }
@@ -266,8 +250,7 @@ class SwapService {
     try {
       const response = await apiClient.get(`/api/swaps/trending?limit=${limit}`) as { data: { challenges: SwapChallenge[] } };
       return response.data.challenges || [];
-    } catch (error: any) {
-      console.error('Get trending challenges error:', error);
+    } catch (error) {
       return [];
     }
   }
@@ -289,8 +272,7 @@ class SwapService {
 
       const response = await apiClient.get(`/api/swaps/search?${params}`) as { data: { challenges: SwapChallenge[] } };
       return response.data.challenges || [];
-    } catch (error: any) {
-      console.error('Search challenges error:', error);
+    } catch (error) {
       return [];
     }
   }
