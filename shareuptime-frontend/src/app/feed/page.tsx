@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { AdvancedPostActions } from '@/components/ui/AdvancedPostActions';
 import { AdvancedStoriesComponent } from '@/components/ui/AdvancedStoriesComponent';
 import { AdvancedSidebarLayout } from '@/components/ui/AdvancedSidebarLayout';
+import { ShareModal } from '@/components/ui/ShareModal';
 import { authService } from '@/lib/auth';
 import { formatDate } from '@/lib/utils';
 
@@ -27,6 +28,8 @@ export default function FeedPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [stories, setStories] = useState<any[]>([]);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [selectedPostForShare, setSelectedPostForShare] = useState<Post | null>(null);
   
   // Mock current user
   const currentUser = {
@@ -153,8 +156,11 @@ export default function FeedPage() {
   };
 
   const handleShare = (postId: string) => {
-    console.log('Share post:', postId);
-    // Handle share functionality
+    const post = posts.find(p => p.id === postId);
+    if (post) {
+      setSelectedPostForShare(post);
+      setShareModalOpen(true);
+    }
   };
 
   const handleStoryClick = (story: any) => {
@@ -233,7 +239,7 @@ export default function FeedPage() {
                 isSaved={post.isSaved}
                 onLike={() => handleLike(post.id)}
                 onComment={() => router.push(`/comments/${post.id}`)}
-                onShare={() => console.log('Share post:', post.id)}
+                onShare={() => handleShare(post.id)}
                 onSave={() => console.log('Save post:', post.id)}
                 onUserProfile={() => router.push(`/profile/${post.username}`)}
               />
@@ -253,6 +259,20 @@ export default function FeedPage() {
           </div>
         )}
       </div>
+
+      {/* Share Modal */}
+      {selectedPostForShare && (
+        <ShareModal
+          isOpen={shareModalOpen}
+          onClose={() => {
+            setShareModalOpen(false);
+            setSelectedPostForShare(null);
+          }}
+          postId={selectedPostForShare.id}
+          postTitle={selectedPostForShare.content}
+          postImage={selectedPostForShare.imageUrl}
+        />
+      )}
     </AdvancedSidebarLayout>
   );
 }

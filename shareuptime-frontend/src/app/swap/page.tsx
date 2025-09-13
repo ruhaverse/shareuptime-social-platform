@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AdvancedSwapComponent } from '@/components/ui/AdvancedSwapComponent';
 import { AdvancedSidebarLayout } from '@/components/ui/AdvancedSidebarLayout';
+import { ShareModal } from '@/components/ui/ShareModal';
 import { authService } from '@/lib/auth';
 import { ShareupCamera } from '@/components/media/ShareupCamera';
 import { AdvancedSwapInterface } from '@/components/ui/AdvancedSwapInterface';
@@ -32,6 +33,9 @@ interface SwapPost {
 
 export default function SwapPage() {
   const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [selectedPostForShare, setSelectedPostForShare] = useState<SwapPost | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -153,8 +157,11 @@ export default function SwapPage() {
   };
 
   const handleShare = (postId: string) => {
-    console.log('Share post:', postId);
-    // Here you would implement the actual share logic
+    const post = mockSwapPosts.find(p => p.id === postId);
+    if (post) {
+      setSelectedPostForShare(post);
+      setShareModalOpen(true);
+    }
   };
 
   return (
@@ -170,6 +177,20 @@ export default function SwapPage() {
           onShare={handleShare}
         />
       </div>
+
+      {/* Share Modal */}
+      {selectedPostForShare && (
+        <ShareModal
+          isOpen={shareModalOpen}
+          onClose={() => {
+            setShareModalOpen(false);
+            setSelectedPostForShare(null);
+          }}
+          postId={selectedPostForShare.id}
+          postTitle={selectedPostForShare.caption}
+          postImage={selectedPostForShare.originalImage}
+        />
+      )}
     </AdvancedSidebarLayout>
   );
 }
