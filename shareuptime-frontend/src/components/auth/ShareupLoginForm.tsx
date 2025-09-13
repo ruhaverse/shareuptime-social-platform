@@ -5,7 +5,7 @@ import { ShareupButton } from '@/components/ui/ShareupButton';
 import { ShareupInput } from '@/components/ui/ShareupInput';
 import { ShareupCard } from '@/components/ui/ShareupCard';
 import { shareupColors } from '@/styles/shareup-colors';
-import { AuthService } from '@/lib/auth';
+import { AuthAPI } from '@/services/api';
 
 interface LoginFormData {
   email: string;
@@ -31,7 +31,20 @@ export const ShareupLoginForm: React.FC<ShareupLoginFormProps> = ({
   const [loading, setLoading] = useState(false);
   const [generalError, setGeneralError] = useState('');
 
-  const authService = new AuthService();
+  // Unified login action used by both form submit and button onPress
+  const doLogin = async () => {
+    if (!validateForm()) return;
+    setLoading(true);
+    setGeneralError('');
+    try {
+      await AuthAPI.login({ email: formData.email, password: formData.password });
+      onSuccess?.();
+    } catch (error: any) {
+      setGeneralError(error?.message || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const validateForm = (): boolean => {
     const newErrors: Partial<LoginFormData> = {};
@@ -54,20 +67,7 @@ export const ShareupLoginForm: React.FC<ShareupLoginFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!validateForm()) return;
-
-    setLoading(true);
-    setGeneralError('');
-
-    try {
-      await authService.login(formData.email, formData.password);
-      onSuccess?.();
-    } catch (error: any) {
-      setGeneralError(error.message || 'Login failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    await doLogin();
   };
 
   const updateFormData = (field: keyof LoginFormData, value: string) => {
@@ -89,7 +89,7 @@ export const ShareupLoginForm: React.FC<ShareupLoginFormProps> = ({
             flex items-center justify-center
             shadow-lg
           `}>
-            <span className={`text-4xl font-bold text-[${shareupColors.iondigoDye}]`}>
+            <span className={`text-4xl font-bold text-shareup-primary`}>
               SU
             </span>
           </div>
@@ -107,9 +107,9 @@ export const ShareupLoginForm: React.FC<ShareupLoginFormProps> = ({
             {generalError && (
               <div className={`
                 p-3 rounded-lg 
-                bg-[${shareupColors.red}]/10 
-                border border-[${shareupColors.red}]/20
-                text-[${shareupColors.red}] 
+                bg-shareup-red/10 
+                border border-shareup-red/20
+                text-shareup-red 
                 text-sm
               `}>
                 {generalError}
@@ -139,7 +139,7 @@ export const ShareupLoginForm: React.FC<ShareupLoginFormProps> = ({
                 type="button"
                 onClick={onForgotPassword}
                 className={`
-                  text-sm text-[${shareupColors.iondigoDye}] 
+                  text-sm text-shareup-primary 
                   hover:underline font-semibold
                 `}
               >
@@ -149,7 +149,7 @@ export const ShareupLoginForm: React.FC<ShareupLoginFormProps> = ({
 
             <ShareupButton
               title="Share in"
-              onPress={() => handleSubmit}
+              onPress={() => { void doLogin(); }}
               loading={loading}
               className="w-full"
               size="large"
@@ -158,10 +158,10 @@ export const ShareupLoginForm: React.FC<ShareupLoginFormProps> = ({
             {/* Alternative Login Options */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <div className={`w-full border-t border-[${shareupColors.lighterGray}]`}></div>
+                <div className={`w-full border-t border-shareup-lighter-gray`}></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className={`px-2 bg-white text-[${shareupColors.dimGray}]`}>
+                <span className={`px-2 bg-white text-shareup-dim-gray`}>
                   or
                 </span>
               </div>
@@ -173,10 +173,10 @@ export const ShareupLoginForm: React.FC<ShareupLoginFormProps> = ({
                 type="button"
                 className={`
                   w-full flex items-center justify-center px-4 py-3
-                  border border-[${shareupColors.lighterGray}]
+                  border border-shareup-lighter-gray
                   rounded-lg
-                  text-[${shareupColors.dark}] font-medium
-                  hover:bg-[${shareupColors.aliceBlue}]
+                  text-shareup-dark font-medium
+                  hover:bg-shareup-light
                   transition-colors duration-200
                 `}
               >
@@ -188,10 +188,10 @@ export const ShareupLoginForm: React.FC<ShareupLoginFormProps> = ({
                 type="button"
                 className={`
                   w-full flex items-center justify-center px-4 py-3
-                  border border-[${shareupColors.lighterGray}]
+                  border border-shareup-lighter-gray
                   rounded-lg
-                  text-[${shareupColors.dark}] font-medium
-                  hover:bg-[${shareupColors.aliceBlue}]
+                  text-shareup-dark font-medium
+                  hover:bg-shareup-light
                   transition-colors duration-200
                 `}
               >
@@ -202,14 +202,14 @@ export const ShareupLoginForm: React.FC<ShareupLoginFormProps> = ({
 
             {/* Sign Up Link */}
             <div className="text-center pt-4">
-              <span className={`text-[${shareupColors.dimGray}]`}>
+              <span className={`text-shareup-dim-gray`}>
                 Don't have an account?{' '}
               </span>
               <button
                 type="button"
                 onClick={onSignUp}
                 className={`
-                  text-[${shareupColors.iondigoDye}] 
+                  text-shareup-primary 
                   hover:underline font-semibold
                 `}
               >
