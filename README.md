@@ -1,14 +1,26 @@
 # 🚀 ShareUpTime - Next-Generation Social Media Platform
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org/)
-[![Docker](https://img.shields.io/badge/docker-%3E%3D20.0.0-blue)](https://www.docker.com/)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/ruhaverse/shareuptime-social-platform/actions)
-[![Coverage](https://img.shields.io/badge/coverage-85%25-green.svg)](https://codecov.io/gh/ruhaverse/shareuptime-social-platform)
-[![Security](https://img.shields.io/badge/security-A+-brightgreen.svg)](./SECURITY.md)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
+Modern, ölçeklenebilir sosyal medya platformu. Mikroservis mimarisi, gerçek zamanlı etkileşimler ve çapraz platform desteği ile geliştirilmiştir.
 
-> A modern, scalable social media platform built with microservices architecture, featuring real-time interactions, AI-powered feeds, and cross-platform support.
+## 📋 İçindekiler
+- [🏗️ Proje Yapısı](#️-proje-yapısı)
+- [🚀 Hızlı Başlangıç](#-hızlı-başlangıç)
+- [🔧 Geliştirme Ortamı](#-geliştirme-ortamı)
+- [📱 Uygulamalar](#-uygulamalar)
+- [🏛️ Mimari](#️-mimari)
+- [🔌 API Dokümantasyonu](#-api-dokümantasyonu)
+- [🐛 Sorun Giderme](#-sorun-giderme)
+- [🤝 Katkıda Bulunma](#-katkıda-bulunma)
+
+## ✨ Özellikler
+- 🔐 JWT tabanlı güvenli kimlik doğrulama
+- 📱 Responsive web arayüzü (Next.js 15)
+- 📲 Cross-platform mobil uygulama (React Native)
+- 🏗️ Mikroservis mimarisi
+- 🔄 Real-time bildirimler
+- 📊 Monitoring ve logging
+- 🐳 Docker containerization
+- 🌐 Modern Türkçe arayüz
 
 ## 📋 Table of Contents
 
