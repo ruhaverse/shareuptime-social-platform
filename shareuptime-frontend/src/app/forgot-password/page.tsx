@@ -200,10 +200,9 @@ export default function ForgotPasswordPage() {
                 <ShareupInput
                   placeholder="Email Address"
                   value={form.email}
-                  onChangeText={(text) => updateForm('email', text)}
+                  onChange={(value) => updateForm('email', value)}
                   error={errors.email}
-                  keyboardType="email-address"
-                  label="Email"
+                  type="email"
                 />
 
                 <ShareupButton
@@ -211,7 +210,7 @@ export default function ForgotPasswordPage() {
                   onPress={handleSendOTP}
                   variant="primary"
                   size="large"
-                  fullWidth
+                  className="w-full"
                   loading={isLoading}
                 />
               </div>
@@ -235,11 +234,9 @@ export default function ForgotPasswordPage() {
                 <ShareupInput
                   placeholder="Enter 6-digit code"
                   value={form.otp}
-                  onChangeText={(text) => updateForm('otp', text.replace(/\D/g, '').slice(0, 6))}
+                  onChange={(value) => updateForm('otp', value.replace(/\D/g, '').slice(0, 6))}
                   error={errors.otp}
-                  keyboardType="numeric"
-                  label="Verification Code"
-                  maxLength={6}
+                  type="number"
                 />
 
                 <ShareupButton
@@ -247,7 +244,7 @@ export default function ForgotPasswordPage() {
                   onPress={handleVerifyOTP}
                   variant="primary"
                   size="large"
-                  fullWidth
+                  className="w-full"
                   loading={isLoading}
                 />
 
@@ -289,19 +286,17 @@ export default function ForgotPasswordPage() {
                 <ShareupInput
                   placeholder="New Password"
                   value={form.newPassword}
-                  onChangeText={(text) => updateForm('newPassword', text)}
+                  onChange={(value) => updateForm('newPassword', value)}
                   error={errors.newPassword}
-                  secureTextEntry
-                  label="New Password"
+                  type="password"
                 />
 
                 <ShareupInput
                   placeholder="Confirm New Password"
                   value={form.confirmPassword}
-                  onChangeText={(text) => updateForm('confirmPassword', text)}
+                  onChange={(value) => updateForm('confirmPassword', value)}
                   error={errors.confirmPassword}
-                  secureTextEntry
-                  label="Confirm Password"
+                  type="password"
                 />
 
                 <ShareupButton
@@ -309,7 +304,7 @@ export default function ForgotPasswordPage() {
                   onPress={handleResetPassword}
                   variant="primary"
                   size="large"
-                  fullWidth
+                  className="w-full"
                   loading={isLoading}
                 />
               </div>

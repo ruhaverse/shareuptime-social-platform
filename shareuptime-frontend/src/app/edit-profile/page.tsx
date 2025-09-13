@@ -261,24 +261,21 @@ export default function EditProfilePage() {
                       <ShareupInput
                         placeholder="First Name"
                         value={profile.firstName}
-                        onChangeText={(text) => updateProfile('firstName', text)}
+                        onChange={(value) => updateProfile('firstName', value)}
                         error={errors.firstName}
-                        label="First Name"
                       />
                       <ShareupInput
                         placeholder="Last Name"
                         value={profile.lastName}
-                        onChangeText={(text) => updateProfile('lastName', text)}
+                        onChange={(value) => updateProfile('lastName', value)}
                         error={errors.lastName}
-                        label="Last Name"
                       />
                     </div>
                     <ShareupInput
                       placeholder="Username"
                       value={profile.username}
-                      onChangeText={(text) => updateProfile('username', text.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
+                      onChange={(value) => updateProfile('username', value.toLowerCase().replace(/[^a-z0-9_]/g, ''))}
                       error={errors.username}
-                      label="Username"
                       icon="@"
                     />
                     <div>
@@ -304,31 +301,26 @@ export default function EditProfilePage() {
                     <ShareupInput
                       placeholder="Email Address"
                       value={profile.email}
-                      onChangeText={(text) => updateProfile('email', text)}
+                      onChange={(value) => updateProfile('email', value)}
                       error={errors.email}
-                      keyboardType="email-address"
-                      label="Email"
+                      type="email"
                     />
                     <ShareupInput
                       placeholder="Phone Number"
                       value={profile.phone}
-                      onChangeText={(text) => updateProfile('phone', text)}
+                      onChange={(value) => updateProfile('phone', value)}
                       error={errors.phone}
-                      keyboardType="phone-pad"
-                      label="Phone"
                     />
                     <ShareupInput
                       placeholder="Website URL"
                       value={profile.website}
-                      onChangeText={(text) => updateProfile('website', text)}
+                      onChange={(value) => updateProfile('website', value)}
                       error={errors.website}
-                      label="Website"
                     />
                     <ShareupInput
                       placeholder="Location"
                       value={profile.location}
-                      onChangeText={(text) => updateProfile('location', text)}
-                      label="Location"
+                      onChange={(value) => updateProfile('location', value)}
                       icon="📍"
                     />
                   </div>

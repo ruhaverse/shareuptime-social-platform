@@ -287,8 +287,7 @@ export default function CommentsPage() {
                 <ShareupInput
                   placeholder={`Reply to ${comment.user.firstName}...`}
                   value={replyText}
-                  onChangeText={setReplyText}
-                  multiline
+                  onChange={(value) => setReplyText(value)}
                   className="flex-1"
                 />
                 <ShareupButton
@@ -394,8 +393,7 @@ export default function CommentsPage() {
                 <ShareupInput
                   placeholder="Write a comment..."
                   value={newComment}
-                  onChangeText={setNewComment}
-                  multiline
+                  onChange={(value) => setNewComment(value)}
                   className="mb-3"
                 />
                 <div className="flex justify-end">

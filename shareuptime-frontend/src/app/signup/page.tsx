@@ -57,7 +57,7 @@ export default function SignUpPage() {
     } else {
       if (!form.phone.trim()) newErrors.phone = 'Phone number is required';
       if (!form.dateOfBirth) newErrors.dateOfBirth = 'Date of birth is required';
-      if (!form.agreeToTerms) newErrors.agreeToTerms = 'You must agree to the terms';
+      if (!form.agreeToTerms) newErrors.agreeToTerms = true;
     }
 
     setErrors(newErrors);
@@ -138,44 +138,39 @@ export default function SignUpPage() {
                   <ShareupInput
                     placeholder="First Name"
                     value={form.firstName}
-                    onChangeText={(text) => updateForm('firstName', text)}
+                    onChange={(value) => updateForm('firstName', value)}
                     error={errors.firstName}
-                    label="First Name"
                   />
                   <ShareupInput
                     placeholder="Last Name"
                     value={form.lastName}
-                    onChangeText={(text) => updateForm('lastName', text)}
+                    onChange={(value) => updateForm('lastName', value)}
                     error={errors.lastName}
-                    label="Last Name"
                   />
                 </div>
 
                 <ShareupInput
                   placeholder="Email Address"
                   value={form.email}
-                  onChangeText={(text) => updateForm('email', text)}
+                  onChange={(value) => updateForm('email', value)}
                   error={errors.email}
-                  keyboardType="email-address"
-                  label="Email"
+                  type="email"
                 />
 
                 <ShareupInput
                   placeholder="Password"
                   value={form.password}
-                  onChangeText={(text) => updateForm('password', text)}
+                  onChange={(value) => updateForm('password', value)}
                   error={errors.password}
-                  secureTextEntry
-                  label="Password"
+                  type="password"
                 />
 
                 <ShareupInput
                   placeholder="Confirm Password"
                   value={form.confirmPassword}
-                  onChangeText={(text) => updateForm('confirmPassword', text)}
+                  onChange={(value) => updateForm('confirmPassword', value)}
                   error={errors.confirmPassword}
-                  secureTextEntry
-                  label="Confirm Password"
+                  type="password"
                 />
 
                 <ShareupButton
@@ -183,7 +178,7 @@ export default function SignUpPage() {
                   onPress={handleNext}
                   variant="primary"
                   size="large"
-                  fullWidth
+                  className="w-full"
                 />
               </div>
             </>
@@ -200,10 +195,8 @@ export default function SignUpPage() {
                 <ShareupInput
                   placeholder="Phone Number"
                   value={form.phone}
-                  onChangeText={(text) => updateForm('phone', text)}
+                  onChange={(value) => updateForm('phone', value)}
                   error={errors.phone}
-                  keyboardType="phone-pad"
-                  label="Phone Number"
                 />
 
                 <div>
@@ -253,14 +246,14 @@ export default function SignUpPage() {
                     onPress={handleBack}
                     variant="secondary"
                     size="large"
-                    fullWidth
+                    className="w-full"
                   />
                   <ShareupButton
                     title="Create Account"
                     onPress={handleSignUp}
                     variant="primary"
                     size="large"
-                    fullWidth
+                    className="w-full"
                     loading={isLoading}
                   />
                 </div>

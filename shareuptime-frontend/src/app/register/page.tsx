@@ -9,7 +9,8 @@ import { authService } from '@/lib/auth';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    fullName: '',
+    firstName: '',
+    lastName: '',
     username: '',
     email: '',
     password: '',
@@ -38,7 +39,8 @@ export default function RegisterPage() {
 
     try {
       const response = await authService.register({
-        fullName: formData.fullName,
+        firstName: formData.firstName || '',
+        lastName: formData.lastName || '',
         username: formData.username,
         email: formData.email,
         password: formData.password,
@@ -82,8 +84,15 @@ export default function RegisterPage() {
               name="fullName"
               type="text"
               required
-              value={formData.fullName}
-              onChange={handleInputChange}
+              value={formData.firstName + ' ' + formData.lastName}
+              onChange={(e) => {
+                const names = e.target.value.split(' ');
+                setFormData({ 
+                  ...formData, 
+                  firstName: names[0] || '', 
+                  lastName: names.slice(1).join(' ') || '' 
+                });
+              }}
               placeholder="Ad ve soyadınızı girin"
             />
             
@@ -139,7 +148,7 @@ export default function RegisterPage() {
               type="submit"
               className="w-full"
               loading={loading}
-              disabled={!formData.fullName || !formData.username || !formData.email || !formData.password || !formData.confirmPassword}
+              disabled={!formData.firstName || !formData.lastName || !formData.username || !formData.email || !formData.password || !formData.confirmPassword}
             >
               {loading ? 'Kayıt yapılıyor...' : 'Kayıt Ol'}
             </Button>

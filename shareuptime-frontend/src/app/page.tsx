@@ -30,22 +30,14 @@ export default function Home() {
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Link href="/login">
-              <ShareupButton
-                title="Giriş Yap"
-                onPress={() => {}}
-                variant="secondary"
-                size="large"
-                className="min-w-[200px] bg-white text-[#044566] hover:bg-gray-100"
-              />
+              <button className="min-w-[200px] bg-white text-[#044566] hover:bg-gray-100 px-8 py-3 rounded-lg font-semibold transition-colors">
+                Giriş Yap
+              </button>
             </Link>
             <Link href="/register">
-              <ShareupButton
-                title="Hesap Oluştur"
-                onPress={() => {}}
-                variant="primary"
-                size="large"
-                className="min-w-[200px] bg-white/20 text-white border-2 border-white hover:bg-white/30"
-              />
+              <button className="min-w-[200px] bg-white/20 text-white border-2 border-white hover:bg-white/30 px-8 py-3 rounded-lg font-semibold transition-colors">
+                Hesap Oluştur
+              </button>
             </Link>
           </div>
         </div>
@@ -125,13 +117,9 @@ export default function Home() {
             Hemen ücretsiz hesabınızı oluşturun!
           </p>
           <Link href="/register">
-            <ShareupButton
-              title="Hemen Başla"
-              onPress={() => {}}
-              variant="secondary"
-              size="large"
-              className="bg-white text-[#044566] hover:bg-gray-100 min-w-[250px]"
-            />
+            <button className="bg-white text-[#044566] hover:bg-gray-100 min-w-[250px] px-8 py-3 rounded-lg font-semibold transition-colors">
+              Hemen Başla
+            </button>
           </Link>
         </div>
       </div>

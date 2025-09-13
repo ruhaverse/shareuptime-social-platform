@@ -210,7 +210,7 @@ export default function ActivityPage() {
             <ShareupInput
               placeholder="Search friends..."
               value={searchQuery}
-              onChangeText={setSearchQuery}
+              onChange={(value) => setSearchQuery(value)}
               icon="🔍"
             />
           </div>

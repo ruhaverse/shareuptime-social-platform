@@ -195,7 +195,7 @@ export default function GroupsPage() {
                 onPress={() => handleJoinGroup(group.id)}
                 variant="primary"
                 size="small"
-                fullWidth
+                className="w-full"
               />
             )}
             
@@ -206,7 +206,7 @@ export default function GroupsPage() {
                   onPress={() => router.push(`/groups/${group.id}`)}
                   variant="primary"
                   size="small"
-                  fullWidth
+                  className="w-full"
                 />
                 <ShareupButton
                   title="Leave"
@@ -224,7 +224,7 @@ export default function GroupsPage() {
                   onPress={() => router.push(`/groups/${group.id}/manage`)}
                   variant="primary"
                   size="small"
-                  fullWidth
+                  className="w-full"
                 />
                 <ShareupButton
                   title="View"
@@ -263,7 +263,7 @@ export default function GroupsPage() {
             <ShareupInput
               placeholder="Search groups..."
               value={searchQuery}
-              onChangeText={setSearchQuery}
+              onChange={(value) => setSearchQuery(value)}
               icon="🔍"
             />
           </div>

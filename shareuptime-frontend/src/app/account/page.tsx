@@ -155,29 +155,24 @@ export default function AccountPage() {
                       <ShareupInput
                         placeholder="First Name"
                         value={user.firstName}
-                        onChangeText={(text) => setUser(prev => ({ ...prev, firstName: text }))}
-                        label="First Name"
+                        onChange={(value) => setUser(prev => ({ ...prev, firstName: value }))}
                       />
                       <ShareupInput
                         placeholder="Last Name"
                         value={user.lastName}
-                        onChangeText={(text) => setUser(prev => ({ ...prev, lastName: text }))}
-                        label="Last Name"
+                        onChange={(value) => setUser(prev => ({ ...prev, lastName: value }))}
                       />
                     </div>
                     <ShareupInput
                       placeholder="Email"
                       value={user.email}
-                      onChangeText={(text) => setUser(prev => ({ ...prev, email: text }))}
-                      label="Email Address"
-                      keyboardType="email-address"
+                      onChange={(value) => setUser(prev => ({ ...prev, email: value }))}
+                      type="email"
                     />
                     <ShareupInput
                       placeholder="Phone"
                       value={user.phone}
-                      onChangeText={(text) => setUser(prev => ({ ...prev, phone: text }))}
-                      label="Phone Number"
-                      keyboardType="phone-pad"
+                      onChange={(value) => setUser(prev => ({ ...prev, phone: value }))}
                     />
                     <div className="flex items-center justify-between pt-4">
                       <div>
@@ -202,29 +197,28 @@ export default function AccountPage() {
                       onPress={() => router.push('/change-password')}
                       variant="secondary"
                       size="medium"
-                      fullWidth
+                      className="w-full"
                     />
                     <ShareupButton
                       title="Download My Data"
                       onPress={() => console.log('Download data')}
                       variant="secondary"
                       size="medium"
-                      fullWidth
+                      className="w-full"
                     />
                     <ShareupButton
                       title="Logout"
                       onPress={handleLogout}
                       variant="secondary"
                       size="medium"
-                      fullWidth
+                      className="w-full"
                     />
                     <ShareupButton
                       title="Delete Account"
                       onPress={handleDeleteAccount}
                       variant="primary"
                       size="medium"
-                      fullWidth
-                      style={{ backgroundColor: '#ef4444' }}
+                      className="w-full"
                     />
                   </div>
                 </ShareupCard>

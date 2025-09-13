@@ -198,7 +198,6 @@ export default function NotificationsPage() {
                     cursor-pointer hover:shadow-lg transition-all duration-200
                     ${!notification.isRead ? 'border-l-4 border-l-shareup-primary bg-blue-50/30' : ''}
                   `}
-                  onClick={() => markAsRead(notification.id)}
                 >
                   <div className="p-4 flex items-start space-x-3">
                     {/* User Avatar */}
