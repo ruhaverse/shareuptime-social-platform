@@ -3,6 +3,7 @@
 import React from 'react';
 import { MobileNavigation } from '@/components/mobile/MobileNavigation';
 import { shareupColors } from '@/styles/shareup-colors';
+import { HealthBadge } from '@/components/ui/HealthBadge';
 
 interface ShareupLayoutProps {
   children: React.ReactNode;
@@ -24,6 +25,9 @@ export const ShareupLayout: React.FC<ShareupLayoutProps> = ({
 
       {/* Mobile Navigation */}
       {showMobileNav && <MobileNavigation currentPath={currentPath} />}
+
+      {/* Backend Health Status (non-intrusive) */}
+      <HealthBadge />
     </div>
   );
 };

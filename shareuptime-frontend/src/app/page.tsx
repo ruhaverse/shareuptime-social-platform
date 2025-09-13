@@ -15,7 +15,7 @@ export default function Home() {
             flex items-center justify-center
             shadow-2xl
           `}>
-            <span className={`text-5xl font-bold text-[${shareupColors.iondigoDye}]`}>
+            <span className={`text-5xl font-bold text-shareup-primary`}>
               SU
             </span>
           </div>
