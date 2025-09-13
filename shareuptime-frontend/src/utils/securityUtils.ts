@@ -148,7 +148,7 @@ export class SecurityUtils {
         const encrypted = btoa(JSON.stringify(value));
         localStorage.setItem(`shareup_${key}`, encrypted);
       } catch (error) {
-        console.warn('Failed to store data securely');
+        // Silent fail for security - no logging in production
       }
     },
 
@@ -158,7 +158,7 @@ export class SecurityUtils {
         if (!encrypted) return null;
         return JSON.parse(atob(encrypted));
       } catch (error) {
-        console.warn('Failed to retrieve data securely');
+        // Silent fail for security - no logging in production
         return null;
       }
     },

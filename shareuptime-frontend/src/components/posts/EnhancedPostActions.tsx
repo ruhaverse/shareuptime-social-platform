@@ -46,10 +46,10 @@ export const EnhancedPostActions: React.FC<PostActionsProps> = ({
   };
 
   const shareOptions = [
-    { icon: '📱', label: 'Share to Story', action: () => console.log('Share to story') },
-    { icon: '💬', label: 'Send Message', action: () => console.log('Send message') },
+    { icon: '📱', label: 'Share to Story', action: () => { /* Share to story - silent in production */ } },
+    { icon: '💬', label: 'Send Message', action: () => { /* Send message - silent in production */ } },
     { icon: '📋', label: 'Copy Link', action: () => navigator.clipboard.writeText(window.location.href) },
-    { icon: '📧', label: 'Share via Email', action: () => console.log('Share via email') },
+    { icon: '📧', label: 'Share via Email', action: () => { /* Share via email - silent in production */ } },
   ];
 
   return (

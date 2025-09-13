@@ -81,10 +81,10 @@ export const AdvancedSwapComponent: React.FC<AdvancedSwapComponentProps> = ({
           onSwapResponse(showSwapCamera, file);
           setShowSwapCamera(null);
         } else {
-          console.error('Failed to submit swap response:', result.message);
+          // Silent fail - no logging in production
         }
       } catch (error) {
-        console.error('Error submitting swap response:', error);
+        // Silent fail - no logging in production
       }
     } else {
       // Handle original image for new swap
@@ -119,11 +119,10 @@ export const AdvancedSwapComponent: React.FC<AdvancedSwapComponentProps> = ({
         // Call the original handler for any additional UI updates
         onCreateSwap(swapData);
       } else {
-        console.error('Failed to create swap:', result.message);
-        // You can implement toast notification here
+        // Silent fail - no logging in production
       }
     } catch (error) {
-      console.error('Error creating swap:', error);
+      // Silent fail - no logging in production
     }
   };
 

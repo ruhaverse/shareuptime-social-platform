@@ -123,12 +123,9 @@ class MigrationService {
    * Migrate legacy console.log statements to proper logging
    */
   replaceLegacyLogging(code: string): string {
-    // Replace console.log with proper error handling
+    // Replace console statements with proper error handling
     return code
-      .replace(/console\.log\([^)]*\)/g, '// Removed legacy console.log')
-      .replace(/console\.error\([^)]*\)/g, '// Removed legacy console.error')
-      .replace(/console\.warn\([^)]*\)/g, '// Removed legacy console.warn')
-      .replace(/console\.info\([^)]*\)/g, '// Removed legacy console.info');
+      .replace(/console\.\w+\([^)]*\)/g, '// Removed legacy console statement');
   }
 
   /**

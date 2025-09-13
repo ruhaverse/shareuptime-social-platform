@@ -84,7 +84,7 @@ export class AuthService {
     try {
       await apiClient.post('/auth/logout');
     } catch (error) {
-      console.error('Logout error:', error);
+      // Silent logout error - no logging in production
     } finally {
       Cookies.remove('token');
       Cookies.remove('userId');

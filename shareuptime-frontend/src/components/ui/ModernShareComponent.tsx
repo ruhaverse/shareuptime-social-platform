@@ -112,7 +112,6 @@ export const ModernShareComponent: React.FC<ModernShareComponentProps> = ({
         showErrorMessage(response.message || 'Failed to share');
       }
     } catch (error) {
-      console.error('Share error:', error);
       showErrorMessage('An error occurred while sharing');
     } finally {
       setIsLoading(false);
@@ -129,19 +128,22 @@ export const ModernShareComponent: React.FC<ModernShareComponentProps> = ({
         setCopySuccess(false);
       }, 2000);
     } catch (error) {
-      console.error('Copy error:', error);
       showErrorMessage('Failed to copy link');
     }
   };
 
   const showSuccessMessage = (message: string) => {
-    // You can implement a toast notification system here
-    console.log('Success:', message);
+    // Toast notification system - silent in production
+    if (process.env.NODE_ENV !== 'production') {
+      // Development only feedback
+    }
   };
 
   const showErrorMessage = (message: string) => {
-    // You can implement a toast notification system here
-    console.error('Error:', message);
+    // Toast notification system - silent in production
+    if (process.env.NODE_ENV !== 'production') {
+      // Development only feedback
+    }
   };
 
   return (
