@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { ShareupReels } from '@/components/media/ShareupReels';
 import { ShareupLayout } from '@/components/layout/ShareupLayout';
 import { AdvancedCameraControls } from '@/components/ui/AdvancedCameraControls';
+import { ShareModal } from '@/components/ui/ShareModal';
 import { Plus } from 'lucide-react';
 
 interface Reel {
@@ -26,6 +27,8 @@ export default function ReelsPage() {
   const [reels, setReels] = useState<Reel[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCamera, setShowCamera] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [selectedReelForShare, setSelectedReelForShare] = useState<Reel | null>(null);
 
   // Mock reels data
   const mockReels: Reel[] = [
@@ -101,8 +104,11 @@ export default function ReelsPage() {
   };
 
   const handleShare = (reelId: string) => {
-    console.log('Share reel:', reelId);
-    // Handle share functionality
+    const reel = reels.find(r => r.id === reelId);
+    if (reel) {
+      setSelectedReelForShare(reel);
+      setShareModalOpen(true);
+    }
   };
 
   const handleFollow = (userId: string) => {
@@ -171,6 +177,20 @@ export default function ReelsPage() {
           title="Create Reel"
           onCapture={handleCreateReel}
           onClose={() => setShowCamera(false)}
+        />
+      )}
+
+      {/* Share Modal */}
+      {selectedReelForShare && (
+        <ShareModal
+          isOpen={shareModalOpen}
+          onClose={() => {
+            setShareModalOpen(false);
+            setSelectedReelForShare(null);
+          }}
+          postId={selectedReelForShare.id}
+          postTitle={selectedReelForShare.caption}
+          postImage={selectedReelForShare.videoUrl}
         />
       )}
     </>

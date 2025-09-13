@@ -5,6 +5,7 @@ import { ShareupLayout } from '@/components/layout/ShareupLayout';
 import { ShareupButton } from '@/components/ui/ShareupButton';
 import { ShareupCard } from '@/components/ui/ShareupCard';
 import { PostCard } from '@/components/ui/ShareupCard';
+import { ShareModal } from '@/components/ui/ShareModal';
 import { shareupColors } from '@/styles/shareup-colors';
 
 interface UserProfile {
@@ -36,6 +37,8 @@ export default function ProfilePage() {
   const [posts, setPosts] = useState<UserPost[]>([]);
   const [activeTab, setActiveTab] = useState<'posts' | 'media' | 'likes'>('posts');
   const [isEditing, setIsEditing] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [selectedPostForShare, setSelectedPostForShare] = useState<UserPost | null>(null);
 
   // Mock profile data
   const mockProfile: UserProfile = {
@@ -87,6 +90,14 @@ export default function ProfilePage() {
       year: 'numeric', 
       month: 'long' 
     });
+  };
+
+  const handleShare = (postId: string) => {
+    const post = posts.find(p => p.id === postId);
+    if (post) {
+      setSelectedPostForShare(post);
+      setShareModalOpen(true);
+    }
   };
 
   if (!profile) {
@@ -248,7 +259,7 @@ export default function ProfilePage() {
                       }}
                       onLike={() => console.log('Like post:', post.id)}
                       onComment={() => console.log('Comment on post:', post.id)}
-                      onShare={() => console.log('Share post:', post.id)}
+                      onShare={() => handleShare(post.id)}
                     />
                   ))}
                 </div>
@@ -278,6 +289,20 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+
+        {/* Share Modal */}
+        {selectedPostForShare && (
+          <ShareModal
+            isOpen={shareModalOpen}
+            onClose={() => {
+              setShareModalOpen(false);
+              setSelectedPostForShare(null);
+            }}
+            postId={selectedPostForShare.id}
+            postTitle={selectedPostForShare.content}
+            postImage={selectedPostForShare.images?.[0]}
+          />
+        )}
       </div>
     </ShareupLayout>
   );
