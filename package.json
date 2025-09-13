@@ -1,0 +1,75 @@
+{
+  "name": "shareuptime",
+  "version": "1.0.0",
+  "description": "Next-generation social media platform with microservices architecture",
+  "main": "services/api-gateway/index.js",
+  "scripts": {
+    "start": "docker-compose up -d",
+    "dev": "docker-compose up --build",
+    "stop": "docker-compose down",
+    "logs": "docker-compose logs -f",
+    "test": "npm run test:services",
+    "test:services": "cd services && npm test",
+    "setup": "cp .env.example .env && npm run init:db",
+    "init:db": "node scripts/init-databases.js",
+    "security:audit": "npm audit --audit-level moderate",
+    "security:fix": "npm audit fix",
+    "security:scan": "npm run security:audit && docker run --rm -v $(pwd):/app clair-scanner",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "format": "prettier --write .",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  },
+  "keywords": [
+    "social-media",
+    "microservices",
+    "nodejs",
+    "docker",
+    "kafka",
+    "redis"
+  ],
+  "author": "Ruhaverse Team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ruhaverse/shareuptime-social-platform.git"
+  },
+  "homepage": "https://github.com/ruhaverse/shareuptime-social-platform#readme",
+  "bugs": {
+    "url": "https://github.com/ruhaverse/shareuptime-social-platform/issues"
+  },
+  "license": "MIT",
+  "workspaces": [
+    "services/*"
+  ],
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1",
+    "supertest": "^6.3.3",
+    "eslint": "^8.57.0",
+    "prettier": "^3.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "mongodb-memory-server": "^9.1.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0"
+  },
+  "dependencies": {
+    "@elastic/elasticsearch": "^8.19.1",
+    "dotenv": "^16.6.1",
+    "firebase-admin": "^13.5.0",
+    "minio": "^8.0.5",
+    "mongodb": "^6.19.0",
+    "mongoose": "^8.18.1",
+    "neo4j-driver": "^5.28.1",
+    "pg": "^8.16.3",
+    "redis": "^4.6.0"
+  }
+}
