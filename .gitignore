@@ -130,3 +130,5 @@ firebase-service-account*.json
 # Package lock files (should be committed in production)
 package-lock.json
 yarn.lock
+# Local Netlify folder
+.netlify
